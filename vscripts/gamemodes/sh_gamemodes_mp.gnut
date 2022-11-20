@@ -91,7 +91,7 @@ void function GameModes_Init_SV_CL()
 	//                        //
 	////////////////////////////
 
-	gameMode = CUSTOM_TDM
+	gameMode = custom_tdm
 	#if SERVER || CLIENT
 		GameMode_AddSharedInit(gameMode, Sh_CustomTDM_Init)
 		GameMode_AddSharedInit( gameMode, GamemodeSurvivalShared_Init )

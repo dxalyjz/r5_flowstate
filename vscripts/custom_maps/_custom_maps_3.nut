@@ -35,7 +35,7 @@ array<vector> function GetNewFFADropShipLocations(string locationname, string ma
                 dropshiplocations.append(< 10496,7680,-4224 > )
                 dropshiplocations.append(< 11584,4864,-3968 > )
                 break;
-            case "Skill trainer By Colombia":
+            case "Skill trainer By CafeFPS":
                 dropshiplocations.append(< 15008, 30040, -680 > )
                 dropshiplocations.append(< 19265, 30022, -680 > )
                 dropshiplocations.append(< 19267, 33522, -680 > )

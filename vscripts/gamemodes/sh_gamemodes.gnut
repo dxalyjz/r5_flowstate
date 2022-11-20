@@ -165,7 +165,7 @@ void function GameModes_Init()
 	#endif
 
 	
-	gameMode = CUSTOM_TDM
+	gameMode = custom_tdm
 	GameMode_Create( gameMode )
 	GameMode_SetName( gameMode, "custom_tdm" )
 	GameMode_SetGameModeAnnouncement( gameMode, "phunt_modeDesc" )

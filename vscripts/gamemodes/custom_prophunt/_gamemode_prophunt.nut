@@ -540,7 +540,7 @@ prophunt.mapIndexChanged = false
 prophunt.selectedLocation = prophunt.locationsShuffled[choice]
 	printt("Flowstate DEBUG - Next location selected: ", prophunt.selectedLocation.name)
 	
-if(prophunt.selectedLocation.name == "Skill trainer By Colombia"){
+if(prophunt.selectedLocation.name == "Skill trainer By CafeFPS"){
     DestroyPlayerPropsPROPHUNT()
     wait 2
 	thread SkillTrainerLoad()
