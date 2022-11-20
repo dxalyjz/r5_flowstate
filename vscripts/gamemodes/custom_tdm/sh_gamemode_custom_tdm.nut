@@ -5,6 +5,7 @@ globalize_all_functions
 
 global const NO_CHOICES = 2
 global const SCORE_GOAL_TO_WIN = 100
+global const int NUMBER_OF_MAP_SLOTS_FSDM = 4
 
 global enum eTDMAnnounce
 {
@@ -27,6 +28,32 @@ global struct LocationSettings
     string name
     array<LocPair> spawns
     vector cinematicCameraOffset
+	LocPair &victorypos
+	asset locationAsset
+}
+
+// Screen IDS
+global enum eFSDMScreen
+{
+	WinnerScreen = 0
+	VoteScreen = 1
+	TiedScreen = 2
+	SelectedScreen = 3
+	NextRoundScreen = 4
+	ScoreboardUI = 5
+    NotUsed = 230
+}
+
+global struct PlayerInfo
+{
+	string name
+	int eHandle
+	int team
+	int score
+	int deaths
+	float kd
+	int damage
+	int lastLatency
 }
 
 struct {
@@ -34,7 +61,14 @@ struct {
     array choices
     array<LocationSettings> locationSettings
     var scoreRui
-} file;
+} file
+
+int function ComparePlayerInfo(PlayerInfo a, PlayerInfo b)
+{
+	if(a.score < b.score) return 1;
+	else if(a.score > b.score) return -1;
+	return 0;
+}
 
 void function Sh_CustomTDM_Init()
 {
@@ -63,7 +97,7 @@ void function Sh_CustomTDM_Init()
    case "mp_rr_canyonlands_staging":
         Shared_RegisterLocation(
             NewLocationSettings(
-               "Deathbox by Ayezee",
+               "Deathbox by AyeZee",
                 [
                     //Top Floor
                     NewLocPair(<29351, -8106, -15794>, <4, 45, 0>),
@@ -192,7 +226,7 @@ void function Sh_CustomTDM_Init()
 					NewLocPair(<-16787, 3540, 3075>, <0, 86, 0>),
 					NewLocPair(<-19026, 3749, 4460>, <0, 2, 0>)
                 ],
-                <0, 0, 3000>
+                <0, 0, 3000>,$"rui/flowstatelocations/hillside"
             )
         )
 		Shared_RegisterLocation(
@@ -204,7 +238,7 @@ void function Sh_CustomTDM_Init()
                     NewLocPair(<-10250, -18320, 3323>, <0, 100, 0>),
                     NewLocPair(<-13261, -18100, 3337>, <0, 20, 0>)
                 ],
-                <0, 0, 3000>
+                <0, 0, 3000>,$"rui/flowstatelocations/skulltown"
             )
         )
 		Shared_RegisterLocation(
@@ -216,7 +250,7 @@ void function Sh_CustomTDM_Init()
                     NewLocPair(<-3084, 16315, 2566>, <0, 144, 0>),
                     NewLocPair(<-6517, 15833, 2911>, <0, 51, 0>)
                 ],
-                <0, 0, 3000>
+                <0, 0, 3000>,$"rui/flowstatelocations/containment"
             )
         )
 		Shared_RegisterLocation(
@@ -229,7 +263,7 @@ void function Sh_CustomTDM_Init()
                     NewLocPair(<-18494, -10427, 2825>, <0, -155, 0>),
 					NewLocPair(<-22590, -7534, 3103>, <0, 0, 0>)
                 ],
-                <0, 0, 4000>
+                <0, 0, 4000>,$"rui/flowstatelocations/gaunlet"
             )
         )
 		Shared_RegisterLocation(
@@ -241,7 +275,7 @@ void function Sh_CustomTDM_Init()
                     NewLocPair(<4600, -11450, 2950>, <0, 180, 0>),
                     NewLocPair(<3150, -11153, 3053>, <0, 100, 0>)
                 ],
-                <0, 0, 3000>
+                <0, 0, 3000>,$"rui/flowstatelocations/market"
             )
         )
 		Shared_RegisterLocation(
@@ -253,7 +287,7 @@ void function Sh_CustomTDM_Init()
                     NewLocPair(<25924, 2161, 3848>, <0, -9, 0>),
                     NewLocPair(<28818, 2590, 3798>, <0, 117, 0>)
                 ],
-                <0, 0, 3000>
+                <0, 0, 3000>,$"rui/flowstatelocations/labs"
             )
         )
 		Shared_RegisterLocation(
@@ -270,7 +304,7 @@ void function Sh_CustomTDM_Init()
                     NewLocPair(<27133, -16074, 5414>, <0, -90, 0>),
                     NewLocPair(<27051, -14200, 5582>, <0, -90, 0>)
                 ],
-                <0, 0, 3000>
+                <0, 0, 3000>,$"rui/flowstatelocations/repulsor"
             )
         )
 
@@ -283,7 +317,7 @@ void function Sh_CustomTDM_Init()
                     NewLocPair(<19946, 32, 4960>, <0, -168, 0>),
                     NewLocPair(<12335, -1446, 3984>, <0, 2, 0>)
                 ],
-                <0, 0, 3000>
+                <0, 0, 3000>,$"rui/flowstatelocations/cage"
             )
         )
 
@@ -301,13 +335,13 @@ void function Sh_CustomTDM_Init()
                     NewLocPair(<32654, -1552, 3228>, <0, -90, 0>)
 
                 ],
-                <0, 0, 3000>
+                <0, 0, 3000>,$"rui/flowstatelocations/swamps"
             )
         )
 
 		Shared_RegisterLocation(
             NewLocationSettings(
-                "Interstellar Relay",
+                "Relay",
                 [
                     NewLocPair(<26420, 31700, 4790>, <0, -90, 0>),
                     NewLocPair(<29260, 26245, 4210>, <0, 45, 0>),
@@ -320,7 +354,7 @@ void function Sh_CustomTDM_Init()
                     NewLocPair(<24000, 23650, 4050>, <0, 135, 0>),
                     NewLocPair(<23935, 22080, 4200>, <0, 15, 0>)
                 ],
-                <0, 0, 3000>
+                <0, 0, 3000>,$"rui/flowstatelocations/relay"
             )
         )
 		
@@ -336,7 +370,7 @@ void function Sh_CustomTDM_Init()
                     NewLocPair(<-23125, 25320, 2410>, <0, -20, 0>),
                     NewLocPair(<-21925, 21120, 2390>, <0, 180, 0>)
                 ],
-                <0, 0, 3000>
+                <0, 0, 3000>,$"rui/flowstatelocations/slumlakes"
             )
         )
 		
@@ -349,7 +383,7 @@ void function Sh_CustomTDM_Init()
                     NewLocPair(<-29802, 9886, 3217>, <0, 90, 0>),
                     NewLocPair(<-30895, 10733, 3202>, <0, 0, 0>)
                 ],
-                <0, 0, 3000>
+                <0, 0, 3000>,$"rui/flowstatelocations/kclittletown"
             )
         )
 
@@ -362,20 +396,20 @@ void function Sh_CustomTDM_Init()
                     NewLocPair(<-23614, 13605, 3347>, <0, -90, 0>),
                     NewLocPair(<-24697, 12631, 3085>, <0, 0, 0>)
                 ],
-                <0, 0, 3000>
+                <0, 0, 3000>,$"rui/flowstatelocations/runoff"
             )
         )
 		
 		Shared_RegisterLocation(
             NewLocationSettings(
-                "Big fights happened here",
+                "The Farm",
                 [
                     NewLocPair(<11242, 8591, 4630>, <0, 0, 0>),
                     NewLocPair(<6657, 12189, 5066>, <0, -90, 0>),
                     NewLocPair(<7540, 8620, 5374>, <0, 89, 0>),
                     NewLocPair(<13599, 7838, 4944>, <0, 150, 0>)
                 ],
-                <0, 0, 3000>
+                <0, 0, 3000>,$"rui/flowstatelocations/thefarm"
             )
         )
 		
@@ -388,7 +422,7 @@ void function Sh_CustomTDM_Init()
                     NewLocPair(<-16584, -24859, 2642>, <0, 165, 0>),
                     NewLocPair(<-19019, -26209, 2640>, <0, 65, 0>)
                 ],
-                <0, 0, 2000>
+                <0, 0, 2000>,$"rui/flowstatelocations/thunderdome"
             )
         )
         Shared_RegisterLocation(
@@ -400,7 +434,7 @@ void function Sh_CustomTDM_Init()
                     NewLocPair(<10091, -30000, 3070>, <0, 180, 0>),
                     NewLocPair(<8487, -28838, 3061>, <0, -45, 0>)
                 ],
-                <0, 0, 3000>
+                <0, 0, 3000>,$"rui/flowstatelocations/watert"
             )
         )
 		
@@ -413,7 +447,7 @@ void function Sh_CustomTDM_Init()
                     NewLocPair(<-13826, 15325, 3749>, <0, 160, 0>),
                     NewLocPair(<-16160, 14273, 3770>, <0, 101, 0>)
                 ],
-                <0, 0, 7000>
+                <0, 0, 7000>,$"rui/flowstatelocations/pit"
             )
         )
 		
@@ -426,7 +460,7 @@ void function Sh_CustomTDM_Init()
                     NewLocPair(<-24688, 1316, 2583>, <0, 180, 0>),
                     NewLocPair(<-26492, -5197, 2574>, <0, 50, 0>)
                 ],
-                <0, 0, 3000>
+                <0, 0, 3000>,$"rui/flowstatelocations/airbase"
             )
         )		
 		///////////////////////////////////
@@ -502,7 +536,7 @@ void function Sh_CustomTDM_Init()
 		
 		Shared_RegisterLocation(
 				NewLocationSettings(
-					"Interstellar Relay",
+					"Relay",
 					[
 						NewLocPair(<26420, 31700, 4790>, <0, -90, 0>),
 						NewLocPair(<29260, 26245, 4210>, <0, 45, 0>),
@@ -515,7 +549,7 @@ void function Sh_CustomTDM_Init()
 						NewLocPair(<24000, 23650, 4050>, <0, 135, 0>),
 						NewLocPair(<23935, 22080, 4200>, <0, 15, 0>)
 					],
-					<0, 0, 3000>
+					<0, 0, 3000>,$"rui/flowstatelocations/relay"
 				)
 			)
 		Shared_RegisterLocation(
@@ -530,7 +564,7 @@ void function Sh_CustomTDM_Init()
 						NewLocPair(<-23125, 25320, 2410>, <0, -20, 0>),
 						NewLocPair(<-21925, 21120, 2390>, <0, 180, 0>)
 					],
-					<0, 0, 3000>
+					<0, 0, 3000>,$"rui/flowstatelocations/slumlakes"
 				)
 			)
 		Shared_RegisterLocation(
@@ -542,7 +576,7 @@ void function Sh_CustomTDM_Init()
 						NewLocPair(<-29802, 9886, 3217>, <0, 90, 0>),
 						NewLocPair(<-30895, 10733, 3202>, <0, 0, 0>)
 					],
-					<0, 0, 3000>
+					<0, 0, 3000>,$"rui/flowstatelocations/kclittletown"
 				)
 			)
 		Shared_RegisterLocation(
@@ -554,7 +588,7 @@ void function Sh_CustomTDM_Init()
 						NewLocPair(<-23614, 13605, 3347>, <0, -90, 0>),
 						NewLocPair(<-24697, 12631, 3085>, <0, 0, 0>)
 					],
-					<0, 0, 3000>
+					<0, 0, 3000>,$"rui/flowstatelocations/runoff"
 				)
 			)
 		Shared_RegisterLocation(
@@ -566,7 +600,7 @@ void function Sh_CustomTDM_Init()
 						NewLocPair(<-16584, -24859, 2642>, <0, 165, 0>),
 						NewLocPair(<-19019, -26209, 2640>, <0, 65, 0>)
 					],
-					<0, 0, 2000>
+					<0, 0, 2000>,$"rui/flowstatelocations/thunderdome"
 				)
 			)
 		Shared_RegisterLocation(
@@ -578,7 +612,7 @@ void function Sh_CustomTDM_Init()
 						NewLocPair(<10091, -30000, 3070>, <0, 180, 0>),
 						NewLocPair(<8487, -28838, 3061>, <0, -45, 0>)
 					],
-					<0, 0, 3000>
+					<0, 0, 3000>,$"rui/flowstatelocations/watert"
 				)
 			)
 		Shared_RegisterLocation(
@@ -590,7 +624,7 @@ void function Sh_CustomTDM_Init()
 						NewLocPair(<-13826, 15325, 3749>, <0, 160, 0>),
 						NewLocPair(<-16160, 14273, 3770>, <0, 101, 0>)
 					],
-					<0, 0, 7000>
+					<0, 0, 7000>,$"rui/flowstatelocations/pit"
 				)
 			)
 		Shared_RegisterLocation(
@@ -602,7 +636,7 @@ void function Sh_CustomTDM_Init()
 						NewLocPair(<-24688, 1316, 2583>, <0, 180, 0>),
 						NewLocPair(<-26492, -5197, 2574>, <0, 50, 0>)
 					],
-					<0, 0, 3000>
+					<0, 0, 3000>,$"rui/flowstatelocations/airbase"
 				)
 			)
 
@@ -619,7 +653,7 @@ void function Sh_CustomTDM_Init()
 						  NewLocPair(<27784, -16166, 5046>, <0, -180, 0>),
 						  NewLocPair(<27133, -16074, 5414>, <0, -90, 0>)
 					],
-					<0, 0, 3000>
+					<0, 0, 3000>,$"rui/flowstatelocations/repulsor"
 				)
 			)
 
@@ -636,7 +670,7 @@ void function Sh_CustomTDM_Init()
 						NewLocPair(<34965, 1718, 3529>, <0, 45, 0>),
 						NewLocPair(<32654, -1552, 3228>, <0, -90, 0>)
 					],
-					<0, 0, 3000>
+					<0, 0, 3000>,$"rui/flowstatelocations/swamps"
 				)
 			)
 		Shared_RegisterLocation(
@@ -648,7 +682,7 @@ void function Sh_CustomTDM_Init()
 						NewLocPair(<-10250, -18320, 3323>, <0, 100, 0>),
 						NewLocPair(<-13261, -18100, 3337>, <0, 20, 0>)
 					],
-					<0, 0, 3000>
+					<0, 0, 3000>,$"rui/flowstatelocations/skulltown"
 				)
 			)
 		Shared_RegisterLocation(
@@ -660,199 +694,197 @@ void function Sh_CustomTDM_Init()
 						NewLocPair(<4600, -11450, 2950>, <0, 180, 0>),
 						NewLocPair(<3150, -11153, 3053>, <0, 100, 0>)
 					],
-					<0, 0, 3000>
+					<0, 0, 3000>,$"rui/flowstatelocations/market"
 				)
 			)
-		if(FlowState_EnableCustomMapByBiscutz()){
-		Shared_RegisterLocation(
-				NewLocationSettings(
-					"Custom map by Biscutz",
-					[
-						NewLocPair(<-2768,15163,6469>, <0, -180, 0>),
-						NewLocPair(<-5800,16008,6706>, <0, -48, 0>),
-						NewLocPair(<-5297,13404,6040>, <0, 0, 0>),
-						NewLocPair(<-2348,11823,6194>, <0, 0, 0>),
-						NewLocPair(<-5256,14392,5800>, <0, 0, 0>),
-						NewLocPair(<-3659,13700,6600>, <0, 0, 0>),
-						NewLocPair(<-1514,11165,7730>, <0, 0, 0>)
-					],
-					<0, 0, 3000>
-				)
-			)
-		}	
 			
-		if(FlowState_EnableWhiteForestByZero()){
-		Shared_RegisterLocation(
-			NewLocationSettings(
-				"White Forest By Zer0Bytes",
-				[
-					//Side A
-					NewLocPair( <-33024,17408,3328>, <0,90,0>),
-					NewLocPair( <-33024,16960,3328>, <0,90,0>),
-					NewLocPair( <-33280,16128,3264>, <0,90,0>),
-					NewLocPair( <-32448,16256,3328>, <0,90,0>),
-					NewLocPair( <-32192,16960,3328>, <0,90,0>),
-					NewLocPair( <-32256,16256,3328>, <0,90,0>),
-					NewLocPair( <-32128,17536,3328>, <0,90,0>),
-					NewLocPair( <-32512,17536,3328>, <0,90,0>),
-					NewLocPair( <-32960,17600,3328>, <0,90,0>),
-					NewLocPair( <-33536,17600,3328>, <0,90,0>),
-					NewLocPair( <-33728,17088,3328>, <0,90,0>),
-					NewLocPair( <-33856,16896,3200>, <0,90,0>),
-					NewLocPair( <-33920,17600,3200>, <0,90,0>),
-					NewLocPair( <-34368,18048,3072>, <0,0,0>),
-					NewLocPair( <-34352,18038,3151>, <0,0,0>),
-					NewLocPair( <-36696,19010,3021>, <0,0,0>),
-					NewLocPair( <-37079,19432,3120>, <0,90,0>),
-					NewLocPair( <-37335,19812,3053>, <0,0,0>),
-					NewLocPair( <-37371,19308,3033>, <0,0,0>),
-					NewLocPair( <-37106,19616,3152>, <0,0,0>),
+		// Shared_RegisterLocation(
+				// NewLocationSettings(
+					// "Custom map by Biscutz",
+					// [
+						// NewLocPair(<-2768,15163,6469>, <0, -180, 0>),
+						// NewLocPair(<-5800,16008,6706>, <0, -48, 0>),
+						// NewLocPair(<-5297,13404,6040>, <0, 0, 0>),
+						// NewLocPair(<-2348,11823,6194>, <0, 0, 0>),
+						// NewLocPair(<-5256,14392,5800>, <0, 0, 0>),
+						// NewLocPair(<-3659,13700,6600>, <0, 0, 0>),
+						// NewLocPair(<-1514,11165,7730>, <0, 0, 0>)
+					// ],
+					// <0, 0, 3000>
+				// )
+			// )
+		
+		// Shared_RegisterLocation(
+			// NewLocationSettings(
+				// "White Forest By Zer0Bytes",
+				// [
+					// //Side A
+					// NewLocPair( <-33024,17408,3328>, <0,90,0>),
+					// NewLocPair( <-33024,16960,3328>, <0,90,0>),
+					// NewLocPair( <-33280,16128,3264>, <0,90,0>),
+					// NewLocPair( <-32448,16256,3328>, <0,90,0>),
+					// NewLocPair( <-32192,16960,3328>, <0,90,0>),
+					// NewLocPair( <-32256,16256,3328>, <0,90,0>),
+					// NewLocPair( <-32128,17536,3328>, <0,90,0>),
+					// NewLocPair( <-32512,17536,3328>, <0,90,0>),
+					// NewLocPair( <-32960,17600,3328>, <0,90,0>),
+					// NewLocPair( <-33536,17600,3328>, <0,90,0>),
+					// NewLocPair( <-33728,17088,3328>, <0,90,0>),
+					// NewLocPair( <-33856,16896,3200>, <0,90,0>),
+					// NewLocPair( <-33920,17600,3200>, <0,90,0>),
+					// NewLocPair( <-34368,18048,3072>, <0,0,0>),
+					// NewLocPair( <-34352,18038,3151>, <0,0,0>),
+					// NewLocPair( <-36696,19010,3021>, <0,0,0>),
+					// NewLocPair( <-37079,19432,3120>, <0,90,0>),
+					// NewLocPair( <-37335,19812,3053>, <0,0,0>),
+					// NewLocPair( <-37371,19308,3033>, <0,0,0>),
+					// NewLocPair( <-37106,19616,3152>, <0,0,0>),
 
 
-					// side B
-					NewLocPair( <-35442,24433,4112>, <0,-90,0>),
-					NewLocPair( <-35467,24668,4112>, <0,-90,0>),
-					NewLocPair( <-35454,24954,4135>, <0,-90,0>),
-					NewLocPair( <-34738,24934,4145>, <0,-90,0>),
-					NewLocPair( <-33453,24955,4152>, <0,-90,0>),
-					NewLocPair( <-33380,24704,4173>, <0,-90,0>),
-					NewLocPair( <-33498,24455,4148>, <0,-90,0>),
-					NewLocPair( <-34195,24456,4128>, <0,-90,0>),
-					NewLocPair( <-33745,24188,4093>, <0,-90,0>),
-					NewLocPair( <-33319,24002,3955>, <0,-90,0>),
-					NewLocPair( <-32764,23897,3382>, <0,-90,0>),
-					NewLocPair( <-32317,23278,2779>, <0,-90,0>),
-					NewLocPair( <-32100,22750,2647>, <0,180,0>),
-					NewLocPair( <-35148,24427,4147>, <0,-90,0>),
+					// // side B
+					// NewLocPair( <-35442,24433,4112>, <0,-90,0>),
+					// NewLocPair( <-35467,24668,4112>, <0,-90,0>),
+					// NewLocPair( <-35454,24954,4135>, <0,-90,0>),
+					// NewLocPair( <-34738,24934,4145>, <0,-90,0>),
+					// NewLocPair( <-33453,24955,4152>, <0,-90,0>),
+					// NewLocPair( <-33380,24704,4173>, <0,-90,0>),
+					// NewLocPair( <-33498,24455,4148>, <0,-90,0>),
+					// NewLocPair( <-34195,24456,4128>, <0,-90,0>),
+					// NewLocPair( <-33745,24188,4093>, <0,-90,0>),
+					// NewLocPair( <-33319,24002,3955>, <0,-90,0>),
+					// NewLocPair( <-32764,23897,3382>, <0,-90,0>),
+					// NewLocPair( <-32317,23278,2779>, <0,-90,0>),
+					// NewLocPair( <-32100,22750,2647>, <0,180,0>),
+					// NewLocPair( <-35148,24427,4147>, <0,-90,0>),
 
-					//forest
-					NewLocPair( <-33511,22657,2239>, <0,-90,0>),
-					NewLocPair( <-33813,21797,2178>, <0,-90,0>),
-					NewLocPair( <-34937,22312,2195>, <0,-90,0>),
-					NewLocPair( <-35843,23339,2172>, <0,0,0> ),
-					NewLocPair( <-36700,23252,2237>, <0,0,0> ),
-					NewLocPair( <-36374,21910,2204>, <0,0,0> ),
-					NewLocPair( <-35239,22024,2154>, <0,180,0>),
-					NewLocPair( <-34463,20783,2182>, <0,90,0>),
-					NewLocPair( <-32753,20853,2085>, <0,90,0>),
-					NewLocPair( <-31809,21230,2015>, <0,-90,0>),
-					NewLocPair( <-33549,18878,2129>, <0,90,0>),
-					NewLocPair( <-34726,19371,2106>, <0,90,0>),
-					NewLocPair( <-34295,20018,2134>, <0,90,0>),
-					NewLocPair( <-31263,21107,2019>, <0,180,0>),
-					NewLocPair( <-36806,22295,2261>, <0,0,0> ),
-					NewLocPair( <-36226,20102,2105>, <0,0,0>),
-					NewLocPair( <-32764,19415,2048>, <0,180,0>),
-					NewLocPair( <-32402,22605,2328>, <0,-90,0>),
-					NewLocPair( <-33082,23773,2363>, <0,-90,0>)
+					// //forest
+					// NewLocPair( <-33511,22657,2239>, <0,-90,0>),
+					// NewLocPair( <-33813,21797,2178>, <0,-90,0>),
+					// NewLocPair( <-34937,22312,2195>, <0,-90,0>),
+					// NewLocPair( <-35843,23339,2172>, <0,0,0> ),
+					// NewLocPair( <-36700,23252,2237>, <0,0,0> ),
+					// NewLocPair( <-36374,21910,2204>, <0,0,0> ),
+					// NewLocPair( <-35239,22024,2154>, <0,180,0>),
+					// NewLocPair( <-34463,20783,2182>, <0,90,0>),
+					// NewLocPair( <-32753,20853,2085>, <0,90,0>),
+					// NewLocPair( <-31809,21230,2015>, <0,-90,0>),
+					// NewLocPair( <-33549,18878,2129>, <0,90,0>),
+					// NewLocPair( <-34726,19371,2106>, <0,90,0>),
+					// NewLocPair( <-34295,20018,2134>, <0,90,0>),
+					// NewLocPair( <-31263,21107,2019>, <0,180,0>),
+					// NewLocPair( <-36806,22295,2261>, <0,0,0> ),
+					// NewLocPair( <-36226,20102,2105>, <0,0,0>),
+					// NewLocPair( <-32764,19415,2048>, <0,180,0>),
+					// NewLocPair( <-32402,22605,2328>, <0,-90,0>),
+					// NewLocPair( <-33082,23773,2363>, <0,-90,0>)
 
-				],
-				<0, 0, 3000>
-			)
-		)  
-		}	
+				// ],
+				// <0, 0, 3000>
+			// )
+		// )
+		
 		///////////////////////////////////
 		//PROPHUNT LOCATIONS///////////////
 		
-		RegisterLocationPROPHUNT(
-				NewLocationSettings(
-					"Interstellar Relay",
-					[
-						NewLocPair(<26420, 31700, 4790>, <0, -90, 0>),
-						NewLocPair(<29260, 26245, 4210>, <0, 45, 0>),
-						NewLocPair(<29255, 24360, 4210>, <0, 0, 0>),
-						NewLocPair(<24445, 28970, 4340>, <0, -90, 0>)
-					],
-					<0, 0, 3000>
-				)
-			)
-		RegisterLocationPROPHUNT(
-				NewLocationSettings(
-					"Slum Lakes",
-					[
-						NewLocPair(<-20060, 23800, 2655>, <0, 110, 0>),
-						NewLocPair(<-20245, 24475, 2810>, <0, -160, 0>),
-						NewLocPair(<-25650, 22025, 2270>, <0, 20, 0>),
-						NewLocPair(<-25550, 21635, 2590>, <0, 20, 0>)
-					],
-					<0, 0, 3000>
-				)
-			)
-		RegisterLocationPROPHUNT(
-				NewLocationSettings(
-					"Little Town",
-					[
-						NewLocPair(<-30190, 12473, 3186>, <0, -90, 0>),
-						NewLocPair(<-28773, 11228, 3210>, <0, 180, 0>),
-						NewLocPair(<-29802, 9886, 3217>, <0, 90, 0>),
-						NewLocPair(<-30895, 10733, 3202>, <0, 0, 0>)
-					],
-					<0, 0, 3000>
-				)
-			)
+		// RegisterLocationPROPHUNT(
+				// NewLocationSettings(
+					// "Interstellar Relay",
+					// [
+						// NewLocPair(<26420, 31700, 4790>, <0, -90, 0>),
+						// NewLocPair(<29260, 26245, 4210>, <0, 45, 0>),
+						// NewLocPair(<29255, 24360, 4210>, <0, 0, 0>),
+						// NewLocPair(<24445, 28970, 4340>, <0, -90, 0>)
+					// ],
+					// <0, 0, 3000>
+				// )
+			// )
+		// RegisterLocationPROPHUNT(
+				// NewLocationSettings(
+					// "Slum Lakes",
+					// [
+						// NewLocPair(<-20060, 23800, 2655>, <0, 110, 0>),
+						// NewLocPair(<-20245, 24475, 2810>, <0, -160, 0>),
+						// NewLocPair(<-25650, 22025, 2270>, <0, 20, 0>),
+						// NewLocPair(<-25550, 21635, 2590>, <0, 20, 0>)
+					// ],
+					// <0, 0, 3000>
+				// )
+			// )
+		// RegisterLocationPROPHUNT(
+				// NewLocationSettings(
+					// "Little Town",
+					// [
+						// NewLocPair(<-30190, 12473, 3186>, <0, -90, 0>),
+						// NewLocPair(<-28773, 11228, 3210>, <0, 180, 0>),
+						// NewLocPair(<-29802, 9886, 3217>, <0, 90, 0>),
+						// NewLocPair(<-30895, 10733, 3202>, <0, 0, 0>)
+					// ],
+					// <0, 0, 3000>
+				// )
+			// )
 
-		RegisterLocationPROPHUNT(
-				NewLocationSettings(
-					"Water Treatment",
-					[
-						NewLocPair(<5583, -30000, 3070>, <0, 0, 0>),
-						NewLocPair(<7544, -29035, 3061>, <0, 130, 0>),
-						NewLocPair(<10091, -30000, 3070>, <0, 180, 0>),
-						NewLocPair(<8487, -28838, 3061>, <0, -45, 0>)
-					],
-					<0, 0, 3000>
-				)
-			)
+		// RegisterLocationPROPHUNT(
+				// NewLocationSettings(
+					// "Water Treatment",
+					// [
+						// NewLocPair(<5583, -30000, 3070>, <0, 0, 0>),
+						// NewLocPair(<7544, -29035, 3061>, <0, 130, 0>),
+						// NewLocPair(<10091, -30000, 3070>, <0, 180, 0>),
+						// NewLocPair(<8487, -28838, 3061>, <0, -45, 0>)
+					// ],
+					// <0, 0, 3000>
+				// )
+			// )
 
-		RegisterLocationPROPHUNT(
-				NewLocationSettings(
-					"Airbase",
-					[
-						NewLocPair(<-24140, -4510, 2583>, <0, 90, 0>),
-						NewLocPair(<-28675, 612, 2600>, <0, 18, 0>),
-						NewLocPair(<-24688, 1316, 2583>, <0, 180, 0>),
-						NewLocPair(<-26492, -5197, 2574>, <0, 50, 0>)
-					],
-					<0, 0, 3000>
-				)
-			)
+		// RegisterLocationPROPHUNT(
+				// NewLocationSettings(
+					// "Airbase",
+					// [
+						// NewLocPair(<-24140, -4510, 2583>, <0, 90, 0>),
+						// NewLocPair(<-28675, 612, 2600>, <0, 18, 0>),
+						// NewLocPair(<-24688, 1316, 2583>, <0, 180, 0>),
+						// NewLocPair(<-26492, -5197, 2574>, <0, 50, 0>)
+					// ],
+					// <0, 0, 3000>
+				// )
+			// )
 
-		RegisterLocationPROPHUNT(
-				NewLocationSettings(
-					"Swamps",
-					[
-						NewLocPair(<32704,-8576,3520>, <0, 167, 0>),
-						NewLocPair(<34496,-5888,3008>, <0, 51, 0>),
-						NewLocPair(<33280,-4544,3072>, <0, -17, 0>),
-						NewLocPair(<30720,-6080,2944>, <0, -92, 0>)
-					],
-					<0, 0, 3000>
-				)
-			)
-		RegisterLocationPROPHUNT(
-				NewLocationSettings(
-					"Skull Town",
-					[
-						NewLocPair(<-9320, -13528, 3167>, <0, -100, 0>),
-						NewLocPair(<-7544, -13240, 3161>, <0, -115, 0>),
-						NewLocPair(<-10250, -18320, 3323>, <0, 100, 0>),
-						NewLocPair(<-13261, -18100, 3337>, <0, 20, 0>)
-					],
-					<0, 0, 3000>
-				)
-			)
-		RegisterLocationPROPHUNT(
-				NewLocationSettings(
-					"Market",
-					[
-						NewLocPair(<-110, -9977, 2987>, <0, 0, 0>),
-						NewLocPair(<-1605, -10300, 3053>, <0, -100, 0>),
-						NewLocPair(<4600, -11450, 2950>, <0, 180, 0>),
-						NewLocPair(<3150, -11153, 3053>, <0, 100, 0>)
-					],
-					<0, 0, 3000>
-				)
-			)
+		// RegisterLocationPROPHUNT(
+				// NewLocationSettings(
+					// "Swamps",
+					// [
+						// NewLocPair(<32704,-8576,3520>, <0, 167, 0>),
+						// NewLocPair(<34496,-5888,3008>, <0, 51, 0>),
+						// NewLocPair(<33280,-4544,3072>, <0, -17, 0>),
+						// NewLocPair(<30720,-6080,2944>, <0, -92, 0>)
+					// ],
+					// <0, 0, 3000>
+				// )
+			// )
+		// RegisterLocationPROPHUNT(
+				// NewLocationSettings(
+					// "Skull Town",
+					// [
+						// NewLocPair(<-9320, -13528, 3167>, <0, -100, 0>),
+						// NewLocPair(<-7544, -13240, 3161>, <0, -115, 0>),
+						// NewLocPair(<-10250, -18320, 3323>, <0, 100, 0>),
+						// NewLocPair(<-13261, -18100, 3337>, <0, 20, 0>)
+					// ],
+					// <0, 0, 3000>
+				// )
+			// )
+		// RegisterLocationPROPHUNT(
+				// NewLocationSettings(
+					// "Market",
+					// [
+						// NewLocPair(<-110, -9977, 2987>, <0, 0, 0>),
+						// NewLocPair(<-1605, -10300, 3053>, <0, -100, 0>),
+						// NewLocPair(<4600, -11450, 2950>, <0, 180, 0>),
+						// NewLocPair(<3150, -11153, 3053>, <0, 100, 0>)
+					// ],
+					// <0, 0, 3000>
+				// )
+			// )
 		break
 	///////////////////////////////////
 	//END PROPHUNT LOCATIONS///////////////		
@@ -874,7 +906,7 @@ void function Sh_CustomTDM_Init()
 					NewLocPair(<-26716, -8446, -2733>, <0, 87, 0>),
 					NewLocPair(<-22701, -7660, -2898>, <0, 105, 0>)
                 ],
-                <0, 0, 3000>
+                <0, 0, 3000>,$"rui/flowstatelocations/miragevoyage"
             )
         )
         //break
@@ -912,7 +944,7 @@ void function Sh_CustomTDM_Init()
 					NewLocPair(<12775, 4446, -4235>, <0, 150, 0>),
 					NewLocPair(<9012, 5386, -4242>, <0, 90, 0>)
 				],
-				<0, 0, 3000>
+				<0, 0, 3000>,$"rui/flowstatelocations/ttvbuilding"
 			)
 		)
 		}
@@ -955,7 +987,7 @@ void function Sh_CustomTDM_Init()
 					NewLocPair(<11210, 4164, -4235>, <0, 90, 0>),
 					NewLocPair(<11700, 6207, -4435>, <-10, 90, 0>)
 				],
-				<0, 0, 3000>
+				<0, 0, 3000>,$"rui/flowstatelocations/capitolcity"
 			)
 		)
 		}
@@ -978,7 +1010,7 @@ void function Sh_CustomTDM_Init()
                         NewLocPair(<-27535, 10922, -3280>, <0, -94, 0>),
                         NewLocPair(<-29879, 9151, -2860>, <0, 0, 0>)
                     ],
-                    <0, 0, 2500>
+                    <0, 0, 2500>,$"rui/flowstatelocations/lavafissure"
                 )
             )
 			
@@ -1000,7 +1032,7 @@ void function Sh_CustomTDM_Init()
                         NewLocPair(<-13765, 27654, -2850>, <0, -65, 0>),
                         NewLocPair(<-12121, 26517, -2850>, <0, 124, 0>)
                     ],
-                    <0, 0, 2000>
+                    <0, 0, 2000>,$"rui/flowstatelocations/spaceelevator"
                 )
             )
 			
@@ -1012,7 +1044,7 @@ void function Sh_CustomTDM_Init()
                         NewLocPair(<19559, 232, -4035>, <0, 33, 0>),
                         NewLocPair(<19400, 4384, -4027>, <0, -35, 0>)
                     ],
-                    <0, 0, 2000>
+                    <0, 0, 2000>,$"rui/flowstatelocations/littletown"
                 )
             )
 
@@ -1025,7 +1057,7 @@ void function Sh_CustomTDM_Init()
 						NewLocPair(<2617, 4668, -4250>, <0, 85, 0>),
                         NewLocPair(<1200, 4471, -4150>, <0, 50, 0>)
                     ],
-                    <0, 0, 2000>
+                    <0, 0, 2000>,$"rui/flowstatelocations/ttvbuilding2"
                 )
             )
 
@@ -1039,7 +1071,7 @@ void function Sh_CustomTDM_Init()
 						NewLocPair(<-29512, -25863, -4462>, <0, 3, 0>),
 						NewLocPair(<-28380, -28984, -4102>, <0, 54, 0>)
                     ],
-                    <0, 0, 2000>
+                    <0, 0, 2000>,$"rui/flowstatelocations/littletown2"
                 )
             )
 
@@ -1053,7 +1085,7 @@ void function Sh_CustomTDM_Init()
 						NewLocPair(<17010, -37125, -2129>, <0, 81, 0>),
 						NewLocPair(<15223, -40222, -1998>, <0, 86, 0>)
                     ],
-                    <0, 0, 2000>
+                    <0, 0, 2000>,$"rui/flowstatelocations/dome"
                 )
             )
 
@@ -1066,7 +1098,7 @@ void function Sh_CustomTDM_Init()
                         NewLocPair(<26327, 11857, -2477>, <0, -43, 0>),
 						NewLocPair(<27303, 14528, -3047>, <0, -42, 0>)
                     ],
-                    <0, 0, 2000>
+                    <0, 0, 2000>,$"rui/flowstatelocations/overlook"
                 )
             )
 
@@ -1089,10 +1121,9 @@ void function Sh_CustomTDM_Init()
                         NewLocPair(<19444, 25605, -4602>, <0, 45, 0>),
                         NewLocPair(<21751, 29980, -4226>, <0, -135, 0>),
                         NewLocPair(<17570, 26915, -4637>, <0, -90, 0>),
-                        NewLocPair(<16382, 28296, -4588>, <0, -45, 0>),
-                        NewLocPair(<16618, 28848, -4451>, <0, 40, 0>)
+                        NewLocPair(<16715, 28017, -4650>, <0, -45, 0>)
                     ],
-                    <0, 0, 6500>
+                    <0, 0, 6500>,$"rui/flowstatelocations/refinery"
                 )
             )
 			
@@ -1122,7 +1153,7 @@ void function Sh_CustomTDM_Init()
                         NewLocPair(<11720.60, -19655.80, -3331.97>, <1.44, -116.68, -0>),
                         NewLocPair(<12233.26, -18075.12, -2581.72>, <4.60, -134.70, 0>),
                     ],
-                    <0, 0, 3000>
+                    <0, 0, 3000>,$"rui/flowstatelocations/factory"
                 )
             )
 
@@ -1145,7 +1176,7 @@ void function Sh_CustomTDM_Init()
                         NewLocPair(<26757, -26639, -3673>, <-10, 90, 0>),
                         NewLocPair(<26750, -26202, -3929>, <-10, -90, 0>)
                     ],
-                    <0, 0, 3000>
+                    <0, 0, 3000>,$"rui/flowstatelocations/lavacity"
                 )
             )
 			
@@ -1167,7 +1198,7 @@ void function Sh_CustomTDM_Init()
                         NewLocPair(<-23069, -20567, -4214>, <-11, 146, 0>),
                         NewLocPair(<-20109, -20675, -4252>, <0, -90, 0>)
                     ],
-                    <0, 0, 11000>
+                    <0, 0, 11000>,$"rui/flowstatelocations/thermalstation"
                 )
             )
 			
@@ -1181,27 +1212,51 @@ void function Sh_CustomTDM_Init()
 						NewLocPair(<13100, 18138, -4856>, <0, 120, 0>)
 
                     ],
-                    <0, 0, 2000>
+                    <0, 0, 2000>,$"rui/flowstatelocations/epicenter"
                 )
             )
-					
-		if(FlowState_EnableSkillTrainerByColombia()){
+			
 		Shared_RegisterLocation(
                 NewLocationSettings(
-                   "Skill trainer By Colombia",
+                    "Overlook",
+                    [
+                        NewLocPair(<32774, 6031, -3239>, <0, 117, 0>),
+                        NewLocPair(<28381, 8963, -3224>, <0, 48, 0>),
+                        NewLocPair(<26327, 11857, -2477>, <0, -43, 0>),
+						NewLocPair(<27303, 14528, -3047>, <0, -42, 0>)
+                    ],
+                    <0, 0, 2000>,$"rui/flowstatelocations/overlook"
+                )
+            )	
+			
+		Shared_RegisterLocation(
+                NewLocationSettings(
+                    "Train yard",
+                    [
+                        NewLocPair(<-11956,3021,-2988>, <0, 87, 0>),
+                        NewLocPair(<-13829,2836,-3037>, <0, 122, 0>),
+                        NewLocPair(<-12883,4502,-3340>, <0, 177, 0>),
+						NewLocPair(<-11412,3692,-3405>, <0, 3, 0>),
+						NewLocPair(<-14930,2065,-3140>, <0, 3, 0>)
+                    ],
+                    <0, 0, 2000>,$"rui/flowstatelocations/trainyard"
+                )
+            )
+			
+		Shared_RegisterLocation(
+                NewLocationSettings(
+                   "Skill trainer By CafeFPS",
                     [
                        NewLocPair(<15008, 30040, -680>, <20, 50, 0>),
                        NewLocPair(<19265, 30022, -680>, <11, 132, 0>),
                        NewLocPair(<19267, 33522, -680>, <10, -138, 0>),
                        NewLocPair(<14995, 33566, -680>, <16, -45, 0>)
                     ],
-                   <0, 0, 3000>
+                   <0, 0, 3000>,$"rui/flowstatelocations/skilltrainer"
                 )
             )
-		}
 		
-		if(FlowState_EnableCaveByBlessedSeal() ){
-			Shared_RegisterLocation(
+		Shared_RegisterLocation(
                 NewLocationSettings(
                     "Cave By BlessedSeal",
                     [
@@ -1210,12 +1265,10 @@ void function Sh_CustomTDM_Init()
                         NewLocPair(<-5005, -11170, -213>, <0, -40, 0>),
                         NewLocPair(<-1086, -9685, -3790>, <5, -120, 0>)
                     ],
-                    <0, 0, 2000>
+                    <0, 0, 2000>,$"rui/flowstatelocations/cave"
                 )
             )
-		}
 		
-		if(FlowState_EnableBrightWaterByZero()){
 		Shared_RegisterLocation(
 			NewLocationSettings(
 				"Brightwater By Zer0bytes",
@@ -1297,9 +1350,10 @@ void function Sh_CustomTDM_Init()
 				   NewLocPair(<-26220,35644,-3692>, <0,90,0>),
 				   NewLocPair(<-26320,36392,-3748>, <0,90,0>),
 				],
-				<0, 0, 7450>
+				<0, 0, 7450>,$"rui/flowstatelocations/brightwater"
 			)
-		)}
+		)
+		
 		///////////////////////////////////
 		//PROPHUNT LOCATIONS///////////////			
 		RegisterLocationPROPHUNT(
@@ -1316,7 +1370,7 @@ void function Sh_CustomTDM_Init()
             )
 		RegisterLocationPROPHUNT(
                 NewLocationSettings(
-                    "Skill trainer By Colombia",
+                    "Skill trainer By CafeFPS",
                     [
                         NewLocPair(<15008, 30040, -680>, <20, 50, 0>),
                         NewLocPair(<19265, 30022, -680>, <11, 132, 0>),
@@ -1338,19 +1392,7 @@ void function Sh_CustomTDM_Init()
                     <0, 0, 2000>
                 )
             )
-		Shared_RegisterLocation(
-                NewLocationSettings(
-                    "Overlook",
-                    [
-                        NewLocPair(<32774, 6031, -3239>, <0, 117, 0>),
-                        NewLocPair(<28381, 8963, -3224>, <0, 48, 0>),
-                        NewLocPair(<26327, 11857, -2477>, <0, -43, 0>),
-						NewLocPair(<27303, 14528, -3047>, <0, -42, 0>)
-                    ],
-                    <0, 0, 2000>
-                )
-            )
-			
+
 		RegisterLocationPROPHUNT(
                 NewLocationSettings(
                     "Train yard",
@@ -1429,13 +1471,14 @@ LocPair function NewLocPair(vector origin, vector angles)
     return locPair
 }
 
-LocationSettings function NewLocationSettings(string name, array<LocPair> spawns, vector cinematicCameraOffset)
+LocationSettings function NewLocationSettings(string name, array<LocPair> spawns, vector cinematicCameraOffset, asset Asset = $"rui/menu/maps/map_not_found")
 {
     LocationSettings locationSettings
     locationSettings.name = name
     locationSettings.spawns = spawns
     locationSettings.cinematicCameraOffset = cinematicCameraOffset
-
+	locationSettings.locationAsset = Asset
+	
     return locationSettings
 }
 
@@ -1444,8 +1487,7 @@ void function Shared_RegisterLocation(LocationSettings locationSettings)
     #if SERVER
     _RegisterLocation(locationSettings)
     #endif
-
-
+	
     #if CLIENT
     Cl_RegisterLocation(locationSettings)
     #endif

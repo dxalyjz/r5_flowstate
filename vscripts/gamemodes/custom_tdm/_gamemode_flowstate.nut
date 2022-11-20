@@ -1,17 +1,13 @@
-///////////////////////////////////////////////////////
-// ███████ ██       ██████  ██     ██     ███████ ████████  █████  ████████ ███████
-// ██      ██      ██    ██ ██     ██     ██         ██    ██   ██    ██    ██
-// █████   ██      ██    ██ ██  █  ██     ███████    ██    ███████    ██    █████
-// ██      ██      ██    ██ ██ ███ ██          ██    ██    ██   ██    ██    ██
-// ██      ███████  ██████   ███ ███      ███████    ██    ██   ██    ██    ███████
-///////////////////////////////////////////////////////
+// Flowstate DM
+// Fork of the custom_tdm gamemode made by sal#3261
+
 // Credits:
-// CaféDeColombiaFPS (Retículo Endoplasmático#5955) -- owner/main dev
-// michae\l/#1125 -- initial help
-// AyeZee#6969 -- tdm/ffa dropships and droppods
-// Zer0Bytes#4428 -- rewrite
+// @CafeFPS - Retículo Endoplasmático#5955 -- main dev
+// michae\l/#1125 -- Special collaborator / flowstate admin
+// AyeZee#6969 -- Ctf voting phase to work off & droppods
+// Zer0Bytes#4428 -- Weapons randomizer rewrite
+// makimakima#5561 -- TDM Saved Weapon List
 // everyone else -- advice
-// Makimaki -- TDM Saved Weapon List
 
 global function _CustomTDM_Init
 global function _RegisterLocation
@@ -87,19 +83,19 @@ struct {
 	bool mapSkyToggle = false
 	array<string> allChatLines
 	array<string> battlelog
-	string authkey = ""
+	string authkey = "123"
 } file
 
-struct PlayerInfo
+struct
 {
-	string name
-	int team
-	int score
-	int deaths
-	float kd
-	int damage
-	int lastLatency
-}
+    // Voting
+    array<entity> votedPlayers // array of players that have already voted (bad var name idc)
+    bool votingtime = false
+    bool votestied = false
+    array<int> mapVotes
+    array<int> mapIds
+    int mappicked = 0
+} FS_DM
 
 // ██████   █████  ███████ ███████     ███████ ██    ██ ███    ██  ██████ ████████ ██  ██████  ███    ██ ███████
 // ██   ██ ██   ██ ██      ██          ██      ██    ██ ████   ██ ██         ██    ██ ██    ██ ████   ██ ██
@@ -162,14 +158,16 @@ void function _CustomTDM_Init()
 	AddClientCommandCallback("latency", ClientCommand_ShowLatency)
 	
 	//AddClientCommandCallback("myffadata", ClientCommand_MyFFAData)	
-	AddClientCommandCallback("CC_MenuGiveAimTrainerWeapon", CC_MenuGiveAimTrainerWeapon)
-	AddClientCommandCallback("CC_AimTrainer_SelectWeaponSlot", CC_AimTrainer_SelectWeaponSlot)
-	AddClientCommandCallback("CC_AimTrainer_WeaponSelectorClose", CC_AimTrainer_CloseWeaponSelector)
+	// AddClientCommandCallback("CC_MenuGiveAimTrainerWeapon", CC_MenuGiveAimTrainerWeapon)
+	// AddClientCommandCallback("CC_AimTrainer_SelectWeaponSlot", CC_AimTrainer_SelectWeaponSlot)
+	// AddClientCommandCallback("CC_AimTrainer_WeaponSelectorClose", CC_AimTrainer_CloseWeaponSelector)
 
 	AddClientCommandCallback("flowstatekick", ClientCommand_FlowstateKick)
 	AddClientCommandCallback("commands", ClientCommand_Help)
 	AddClientCommandCallback("say", ClientCommand_Say)
 	AddClientCommandCallback("adminlogin", ClientCommand_adminlogin)
+	// Used for sending votes from client to server
+    AddClientCommandCallback("VoteForMap", ClientCommand_VoteForMap)
 	
 	if(!FlowState_AdminTgive())
 	{
@@ -443,7 +441,7 @@ void function _OnPlayerConnected(entity player)
 
                     array<string> InValidMaps = [
 						"mp_rr_canyonlands_staging",
-						"Skill trainer By Colombia",
+						"Skill trainer By CafeFPS",
 						"Custom map by Biscutz",
 						"White Forest By Zer0Bytes",
 						"Brightwater By Zer0bytes",
@@ -1742,8 +1740,8 @@ void function SimpleChampionUI()
 {
 	//printt("Flowstate DEBUG - Game is starting.")
 
-	foreach(player in GetPlayerArray())
-		if(IsValid(player)) ScreenFade( player, 0, 0, 0, 255, 1.5, 1.5, FFADE_IN | FFADE_PURGE ) //let's do this before destroy player props so it looks good in custom maps
+	// foreach(player in GetPlayerArray())
+		// if(IsValid(player)) ScreenFade( player, 0, 0, 0, 255, 1.5, 1.5, FFADE_IN | FFADE_PURGE ) //let's do this before destroy player props so it looks good in custom maps
 
     DestroyPlayerProps()
 	isBrightWaterByZer0 = false
@@ -1766,6 +1764,7 @@ void function SimpleChampionUI()
 			player.UnfreezeControlsOnServer()
 			HolsterAndDisableWeapons( player )
 		}
+		WaitFrame() //so players won't spawn in same location
 	}
 
 	if (!file.mapIndexChanged)
@@ -1779,7 +1778,7 @@ void function SimpleChampionUI()
 
 	int choice = file.nextMapIndex
 	file.mapIndexChanged = false
-	file.selectedLocation = file.locationSettings[ choice ]
+	file.selectedLocation = file.locationSettings[ FS_DM.mappicked ]
 	file.thisroundDroppodSpawns = GetNewFFADropShipLocations( file.selectedLocation.name, GetMapName() )
 	//printt("Flowstate DEBUG - Next round location is: " + file.selectedLocation.name)
 
@@ -1805,12 +1804,12 @@ void function SimpleChampionUI()
 	{
 		DestroyPlayerProps()
 		CreateFlowStateGroundMedKit( <10725, 5913,-4225>, ZERO_VECTOR , 3 , FlowState_ExtrashieldsSpawntime() )
-	} else if( file.selectedLocation.name == "Skill trainer By Colombia" && FlowState_ExtrashieldsEnabled() )
+	} else if( file.selectedLocation.name == "Skill trainer By CafeFPS" && FlowState_ExtrashieldsEnabled() )
 	{
 		DestroyPlayerProps()
 		CreateFlowStateGroundMedKit( <17247,31823,-310>, ZERO_VECTOR , 3 , FlowState_ExtrashieldsSpawntime() )
 		thread SkillTrainerLoad()
-	} else if(file.selectedLocation.name == "Skill trainer By Colombia" )
+	} else if(file.selectedLocation.name == "Skill trainer By CafeFPS" )
 	{
 		//printt("Flowstate DEBUG - creating props for Skill Trainer.")
 		DestroyPlayerProps()
@@ -1925,6 +1924,7 @@ void function SimpleChampionUI()
 		}
 	}
 	ResetAllPlayerStats()
+	ResetMapVotes()
 	file.ringBoundary = CreateRingBoundary( file.selectedLocation )
 	//printt("Flowstate DEBUG - Bubble created, executing SimpleChampionUI.")
 
@@ -2070,7 +2070,9 @@ void function SimpleChampionUI()
 			player.SetThirdPersonShoulderModeOn()
 			HolsterAndDisableWeapons( player )
 		}
-
+		
+	thread SendScoreboardToClient()
+	
 	wait 1
 	
 	if(GetCurrentPlaylistVarBool("flowstateBattleLogEnable", false ))
@@ -2085,49 +2087,324 @@ void function SimpleChampionUI()
 	if( GetBestPlayer() != null )
 		SurvivalCommentary_HostAnnounce( eSurvivalCommentaryBucket.WINNER )
 
+	int skinIndexForChampion = RandomIntRangeInclusive(1,4)
+
 	foreach( entity champion in GetPlayerArray() )
 	{
 		if( !IsValid( champion ) ) continue
 		array<ItemFlavor> characterSkinsA = GetValidItemFlavorsForLoadoutSlot( ToEHI( champion ), Loadout_CharacterSkin( LoadoutSlot_GetItemFlavor( ToEHI( champion ), Loadout_CharacterClass() ) ) )
-		CharacterSkin_Apply( champion, characterSkinsA[0] )
+		
 		if( GetBestPlayer() == champion ) 
+		{
 			PlayerTrail(champion,1)
+			CharacterSkin_Apply( champion, characterSkinsA[characterSkinsA.len()-skinIndexForChampion])
+		}
+		else
+			CharacterSkin_Apply( champion, characterSkinsA[0] )
 	}
+
+	file.ringBoundary.Destroy()
+	
+	wait 3
+	
 	foreach( player in GetPlayerArray() )
 	{
 		if( !IsValid( player ) ) continue
-		
-		AddCinematicFlag( player, CE_FLAG_HIDE_MAIN_HUD | CE_FLAG_EXECUTION )
-		Message( player,"Round Scoreboard", "\n         Name:    K  |   D   |   KD   |   Damage dealt \n \n" + ScoreboardFinal() + "\n\n               Custom_tdm by sal#3261.\n\n                    Flowstate DM " + file.scriptversion + " \n by @CafeFPS & 暇人のEndergreen#7138", 7, "UI_Menu_RoundSummary_Results" )
+		RemoveCinematicFlag( player, CE_FLAG_HIDE_MAIN_HUD | CE_FLAG_EXECUTION )
+		player.SetThirdPersonShoulderModeOff()	
+		player.FreezeControlsOnServer()
 	}
+	
+	int TeamWon = 69
+	
+	TeamWon = gp()[0].GetTeam() //DEBUG VALUE
+	
+	if(IsValid(GetBestPlayer()))
+		TeamWon = GetBestPlayer().GetTeam()
+	
 
-	wait 7
+	// Only do voting for maps with multi locations
+	// if ( file.locationSettings.len() >= NUMBER_OF_MAP_SLOTS_FSDM )
+	// {
 
-	if( file.currentRound == Flowstate_AutoChangeLevelRounds() && Flowstate_EnableAutoChangeLevel() )
-	{
-		// foreach( player in GetPlayerArray() )
-			// Message( player, "We have reached the round to change levels.", "Total Round: " + file.currentRound, 6.0 )
+		// for each player, open the vote menu and set it to the winning team screen
+		foreach( player in GetPlayerArray() )
+		{
+			if( !IsValid( player ) )
+				continue
+			
+			Remote_CallFunction_Replay(player, "ServerCallback_FSDM_OpenVotingPhase", true)
+			Remote_CallFunction_Replay(player, "ServerCallback_FSDM_ChampionScreenHandle", true, TeamWon, skinIndexForChampion)
+			Remote_CallFunction_Replay(player, "ServerCallback_FSDM_SetScreen", eFSDMScreen.WinnerScreen, TeamWon, eFSDMScreen.NotUsed, eFSDMScreen.NotUsed)
+		}
+		
+		
+		thread function() : ()
+		{
+			for( int i = 0; i < NUMBER_OF_MAP_SLOTS_FSDM; ++i )
+			{
+				while( true )
+				{
+					// Get a random location id from the available locations
+					int randomId = RandomIntRange(0, file.locationSettings.len())
+
+					// If the map already isnt picked for voting then append it to the array, otherwise keep looping till it finds one that isnt picked yet
+					if( !FS_DM.mapIds.contains( randomId ) )
+					{
+						FS_DM.mapIds.append( randomId )
+						break
+					}
+				}
+			}
+		}()
+		
+		wait 7
 
 		foreach( player in GetPlayerArray() )
-			Message( player, "Server clean up incoming", "Don't leave. Server is going to reload to avoid lag.", 6.0 )
+		{
+			if( !IsValid( player ) )
+				continue
+			
+			Remote_CallFunction_NonReplay(player, "ServerCallback_FSDM_CoolCamera")
+			Remote_CallFunction_Replay(player, "ServerCallback_FSDM_SetScreen", eFSDMScreen.ScoreboardUI, TeamWon, eFSDMScreen.NotUsed, eFSDMScreen.NotUsed)
+			EmitSoundOnEntityOnlyToPlayer(player, player, "UI_Menu_RoundSummary_Results")
+		}
+		
+		wait 7
+	
+		// Set voting to be allowed
+		FS_DM.votingtime = true
 
-		wait 6.0
+		// For each player, set voting screen and update maps that are picked for voting
+		foreach( player in GetPlayerArray() )
+		{
+			if( !IsValid( player ) )
+				continue
+			
+			Remote_CallFunction_Replay(player, "ServerCallback_FSDM_UpdateVotingMaps", FS_DM.mapIds[0], FS_DM.mapIds[1], FS_DM.mapIds[2], FS_DM.mapIds[3])
+			Remote_CallFunction_Replay(player, "ServerCallback_FSDM_SetScreen", eFSDMScreen.VoteScreen, eFSDMScreen.NotUsed, eFSDMScreen.NotUsed, eFSDMScreen.NotUsed)
+		}
 
-		GameRules_ChangeMap( GetMapName(), GameRules_GetGameMode() )
-	}
+		wait 16
+
+		FS_DM.votestied = false
+		bool anyVotes = false
+
+		// Make voting not allowed
+		FS_DM.votingtime = false
+
+		// See if there was any votes in the first place
+		foreach( int votes in FS_DM.mapVotes )
+		{
+			if( votes > 0 )
+			{
+				anyVotes = true
+				break
+			}
+		}
+
+		if ( anyVotes )
+		{
+			// store the highest vote count for any of the maps
+			int highestVoteCount = -1
+
+			// store the last map id of the map that has the highest vote count
+			int highestVoteId = -1
+
+			// store map ids of all the maps with the highest vote count
+			array<int> mapsWithHighestVoteCount
+
+
+			for(int i = 0; i < NUMBER_OF_MAP_SLOTS_FSDM; ++i)
+			{
+				int votes = FS_DM.mapVotes[i]
+				if( votes > highestVoteCount )
+				{
+					highestVoteCount = votes
+					highestVoteId = FS_DM.mapIds[i]
+
+					// we have a new highest, so clear the array
+					mapsWithHighestVoteCount.clear()
+					mapsWithHighestVoteCount.append(FS_DM.mapIds[i])
+				}
+				else if( votes == highestVoteCount ) // if this map also has the highest vote count, add it to the array
+				{
+					mapsWithHighestVoteCount.append(FS_DM.mapIds[i])
+				}
+			}
+
+			// if there are multiple maps with the highest vote count then it's a tie
+			if( mapsWithHighestVoteCount.len() > 1 )
+			{
+				FS_DM.votestied = true
+			}
+			else // else pick the map with the highest vote count
+			{
+				// Set the vote screen for each player to show the chosen location
+				foreach( player in GetPlayerArray() )
+				{
+					if( !IsValid( player ) )
+						continue
+
+					Remote_CallFunction_Replay(player, "ServerCallback_FSDM_SetScreen", eFSDMScreen.SelectedScreen, eFSDMScreen.NotUsed, highestVoteId, eFSDMScreen.NotUsed)
+				}
+
+				// Set the location to the location that won
+				FS_DM.mappicked = highestVoteId
+			}
+
+			if ( FS_DM.votestied )
+			{
+				foreach( player in GetPlayerArray() )
+				{
+					if( !IsValid( player ) )
+						continue
+
+					Remote_CallFunction_Replay(player, "ServerCallback_FSDM_SetScreen", eFSDMScreen.TiedScreen, eFSDMScreen.NotUsed, 42069, eFSDMScreen.NotUsed)
+				}
+
+				mapsWithHighestVoteCount.randomize()
+				waitthread RandomizeTiedLocations(mapsWithHighestVoteCount)
+			}
+		}
+		else // No one voted so pick random map
+		{
+			// Pick a random location id from the aviable locations
+			FS_DM.mappicked = RandomIntRange(0, file.locationSettings.len() - 1)
+
+			// Set the vote screen for each player to show the chosen location
+			foreach( player in GetPlayerArray() )
+			{
+				if( !IsValid( player ) )
+					continue
+
+				Remote_CallFunction_Replay(player, "ServerCallback_FSDM_SetScreen", eFSDMScreen.SelectedScreen, eFSDMScreen.NotUsed, FS_DM.mappicked, eFSDMScreen.NotUsed)
+			}
+		}
+
+		//wait for timing
+		wait 5
+
+		// Close the votemenu for each player
+		foreach( player in GetPlayerArray() )
+		{
+			if( !IsValid( player ) )
+				continue
+			
+			ScreenCoverTransition_Player(player, Time() + 1)
+			Remote_CallFunction_Replay(player, "ServerCallback_FSDM_OpenVotingPhase", false)
+		}
+	wait 2
+	// }
+	
+    // Clear players the voted for next voting
+    FS_DM.votedPlayers.clear()
+
+    // Clear mapids for next voting
+    FS_DM.mapIds.clear()	
+	
+	// if( file.currentRound == Flowstate_AutoChangeLevelRounds() && Flowstate_EnableAutoChangeLevel() )
+	// {
+		// // foreach( player in GetPlayerArray() )
+			// // Message( player, "We have reached the round to change levels.", "Total Round: " + file.currentRound, 6.0 )
+
+		// foreach( player in GetPlayerArray() )
+			// Message( player, "Server clean up incoming", "Don't leave. Server is going to reload to avoid lag.", 6.0 )
+
+		// wait 6.0
+
+		// GameRules_ChangeMap( GetMapName(), GameRules_GetGameMode() )
+	// }
 
 	foreach( player in GetPlayerArray() )
 	{
 		if( !IsValid( player ) ) continue
 		
 		ClearInvincible( player )
-		RemoveCinematicFlag( player, CE_FLAG_HIDE_MAIN_HUD | CE_FLAG_EXECUTION )
-		player.SetThirdPersonShoulderModeOff()
+		player.UnfreezeControlsOnServer()
 	}
 
-	file.ringBoundary.Destroy()
-
 	file.currentRound++
+}
+
+// purpose: display the UI for randomization of tied maps at the end of voting
+void function RandomizeTiedLocations(array<int> maps)
+{
+    bool donerandomizing = false
+    int randomizeammount = RandomIntRange(50, 75)
+    int i = 0
+    int mapslength = maps.len()
+    int currentmapindex = 0
+    int selectedamp = 0
+
+    while (!donerandomizing)
+    {
+        // If currentmapindex is out of range set to 0
+        if (currentmapindex >= mapslength)
+            currentmapindex = 0
+
+        // Update Randomizer ui for each player
+        foreach( player in GetPlayerArray() )
+        {
+            if( !IsValid( player ) )
+                continue
+
+            Remote_CallFunction_Replay(player, "ServerCallback_FSDM_SetScreen", eFSDMScreen.TiedScreen, 69, maps[currentmapindex], 0)
+        }
+
+        // stop randomizing once the randomize ammount is done
+        if (i >= randomizeammount)
+        {
+            donerandomizing = true
+            selectedamp = currentmapindex
+        }
+
+        i++
+        currentmapindex++
+
+        if (i >= randomizeammount - 15 && i < randomizeammount - 5) // slow down voting randomizer speed
+        {
+            wait 0.15
+        }
+        else if (i >= randomizeammount - 5) // slow down voting randomizer speed
+        {
+            wait 0.25
+        }
+        else // default voting randomizer speed
+        {
+            wait 0.05
+        }
+    }
+
+    // Show final selected map
+    foreach( player in GetPlayerArray() )
+    {
+        if( !IsValid( player ) )
+            continue
+
+        Remote_CallFunction_Replay(player, "ServerCallback_FSDM_SetScreen", eFSDMScreen.TiedScreen, 69, maps[selectedamp], 1)
+    }
+
+    // Pause on selected map for a sec for visuals
+    wait 0.5
+
+    // Procede to final location picked screen
+    foreach( player in GetPlayerArray() )
+    {
+        if( !IsValid( player ) )
+            continue
+
+        Remote_CallFunction_Replay(player, "ServerCallback_FSDM_SetScreen", eFSDMScreen.SelectedScreen, 69, maps[selectedamp], eFSDMScreen.NotUsed)
+    }
+
+    // Set selected location on server
+    FS_DM.mappicked = maps[selectedamp]
+}
+
+void function ResetMapVotes()
+{
+    FS_DM.mapVotes.clear()
+    FS_DM.mapVotes.resize( NUMBER_OF_MAP_SLOTS_FSDM )
 }
 
 //       ██ ██████  ██ ███    ██  ██████  ██
@@ -2298,8 +2575,6 @@ void function PlayerTrail(entity player, int onoff)
 		entity smokeTrailFX = StartParticleEffectOnEntityWithPos_ReturnEntity( player, GetParticleSystemIndex( $"P_grenade_thermite_trail"), FX_PATTACH_ABSORIGIN_FOLLOW, smokeAttachID, <0,0,0>, VectorToAngles( <0,0,-1> ) )
 		EffectSetControlPointVector( smokeTrailFX, 1, smokeColor )
         player.p.DEV_lastDroppedSurvivalWeaponProp = smokeTrailFX
-		array<ItemFlavor> characterSkinsA = GetValidItemFlavorsForLoadoutSlot( ToEHI( player ), Loadout_CharacterSkin( LoadoutSlot_GetItemFlavor( ToEHI( player ), Loadout_CharacterClass() ) ) )
-		CharacterSkin_Apply( player, characterSkinsA[characterSkinsA.len()-RandomIntRangeInclusive(1,4)])
     }
 	else
     {
@@ -2460,6 +2735,25 @@ kd = (float(floorkd))/100
 return kd
 }
 
+void function SendScoreboardToClient()
+{
+	foreach(player in GetPlayerArray())
+	{
+		if(!IsValid(player)) continue
+		
+		PlayerInfo p
+		p.eHandle = player.GetEncodedEHandle()
+		p.score = player.GetPlayerGameStat( PGS_KILLS )
+		p.deaths = player.GetPlayerGameStat( PGS_DEATHS )
+		p.kd = getkd(p.score,p.deaths)
+		p.damage = int(player.p.playerDamageDealt)
+		p.lastLatency = int(player.GetLatency()* 1000)
+		
+		Remote_CallFunction_NonReplay(player, "ServerCallback_ClearScoreboardOnClient")
+		Remote_CallFunction_NonReplay(player, "ServerCallback_SendScoreboardToClient", p.eHandle, p.score, p.deaths, p.kd, p.damage, p.lastLatency)
+	}
+}
+
 string function ScoreboardFinal(bool fromConsole = false)
 //Este muestra el scoreboard completo
 //Thanks marumaru（vesslanG）#3285
@@ -2607,13 +2901,6 @@ array<PlayerInfo> playersInfo = []
 		return msg
 }
 
-int function ComparePlayerInfo(PlayerInfo a, PlayerInfo b)
-{
-	if(a.score < b.score) return 1;
-	else if(a.score > b.score) return -1;
-	return 0;
-}
-
 void function ResetAllPlayerStats()
 {
     foreach(player in GetPlayerArray()) {
@@ -2686,6 +2973,41 @@ bool function IsAdmin( entity player )
 	if(file.authkey == "") return false
 	
 	return player.p.isAdmin
+}
+
+bool function ClientCommand_VoteForMap(entity player, array<string> args)
+{
+    // don't allow multiple votes
+    if ( FS_DM.votedPlayers.contains( player ) )
+        return false
+
+    // dont allow votes if its not voting time
+    if ( !FS_DM.votingtime )
+        return false
+
+    // get map id from args
+    int mapid = args[0].tointeger()
+
+    // reject map ids that are outside of the range
+    if ( mapid >= NUMBER_OF_MAP_SLOTS_FSDM || mapid < 0 )
+        return false
+
+    // add a vote for selected maps
+    FS_DM.mapVotes[mapid]++
+
+    // update current amount of votes for each map
+    foreach( p in GetPlayerArray() )
+    {
+        if( !IsValid( p ) )
+            continue
+
+        Remote_CallFunction_Replay(p, "ServerCallback_FSDM_UpdateMapVotesClient", FS_DM.mapVotes[0], FS_DM.mapVotes[1], FS_DM.mapVotes[2], FS_DM.mapVotes[3])
+    }
+
+    // append player to the list of players the voted so they cant vote again
+    FS_DM.votedPlayers.append(player)
+
+    return true
 }
 
 bool function CC_TDM_Weapon_Selector_Open( entity player, array<string> args )

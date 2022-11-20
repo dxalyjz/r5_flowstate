@@ -3,7 +3,9 @@
     [
         "mp_rr_desertlands_64k_x_64k",
         "mp_rr_canyonlands_mu1",
-		"mp_rr_canyonlands_mu1_night"
+		"mp_rr_canyonlands_mu1_night",
+        "GibbyLobaFinisher",
+		"emotescustom"
     ],
     "stbsp": "mp_rr_desertlands_64k_x_64k"
 }
