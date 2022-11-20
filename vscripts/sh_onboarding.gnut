@@ -356,9 +356,13 @@ void function TakeLoadoutRelatedWeapons( entity player )
 	if(IsValid(player.GetOffhandWeapon( OFFHAND_ULTIMATE )))
 		player.TakeOffhandWeapon( OFFHAND_ULTIMATE )
 
+	//passive
 	ItemFlavor passiveAbility = CharacterClass_GetPassiveAbility( character )
 	if(GameRules_GetGameMode() == SURVIVAL)
 		TakePassive( player, CharacterAbility_GetPassiveIndex( passiveAbility ) )
+	
+	//holospray
+	player.TakeOffhandWeapon( OFFHAND_EQUIPMENT )
 }
 
 void function GiveLoadoutRelatedWeapons( entity player )
@@ -389,6 +393,10 @@ void function GiveLoadoutRelatedWeapons( entity player )
 	
 	player.GiveWeapon( meleePrimary, WEAPON_INVENTORY_SLOT_PRIMARY_2, [] )
 	player.GiveOffhandWeapon( meleeOffhand, OFFHAND_MELEE, [] )
+
+	player.TakeOffhandWeapon( OFFHAND_EQUIPMENT )
+	player.GiveOffhandWeapon( "mp_ability_emote_projector", OFFHAND_EQUIPMENT )
+
 }
 
 void function DecideRespawnPlayer( entity player, bool giveLoadoutWeapons = true )
