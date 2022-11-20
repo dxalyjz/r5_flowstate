@@ -15,11 +15,11 @@ WeaponData
 	"weapon_type_flags"							"WPT_MELEE"
 	
 	// Models
-    "viewmodel"   								"mdl/Weapons/data_knife/ptpov_data_knife_new.rmdl"
+    "viewmodel"   								"mdl/Weapons/combat_knife/ptpov_combat_knife.rmdl"
 	"playermodel" 								"mdl/weapons/combat_knife/w_combat_knife.rmdl"
 
     // FX
-	"impact_effect_table" 						"melee_dataknife"
+	"impact_effect_table" 						"pulse_blade"
 	
 	"melee_attack_animtime"							"1"
 
