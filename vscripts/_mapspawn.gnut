@@ -299,8 +299,15 @@ void function CodeCallback_MapSpawn() // original script entry point
 	PrecacheWeapon( $"mp_weapon_grenade_electric_smoke" )
 	PrecacheWeapon( $"mp_weapon_deployable_cover" )
 	PrecacheWeapon( $"melee_data_knife" )
+	PrecacheWeapon( $"mp_weapon_data_knife_primary" )
 	PrecacheWeapon( $"melee_bolo_sword" )
 	PrecacheWeapon( $"mp_weapon_bolo_sword_primary" )
+	PrecacheWeapon( $"melee_combat_knife" )
+	PrecacheWeapon( $"mp_weapon_combat_knife_primary" )
+	PrecacheWeapon( $"melee_nessy" )
+	PrecacheWeapon( $"mp_weapon_nessy_primary" )
+	PrecacheWeapon( $"melee_loba_wolf" )
+	PrecacheWeapon( $"mp_weapon_loba_wolf_primary" )
 	PrecacheWeapon( $"mp_weapon_volt_smg" )
 	PrecacheWeapon( $"mp_weapon_frag_drone" )
 	PrecacheWeapon( $"npc_weapon_energy_shotgun" )
@@ -336,9 +343,22 @@ void function CodeCallback_MapSpawn() // original script entry point
 	PrecacheWeapon( $"mp_weapon_dragon_lmg" )
 	PrecacheWeapon( $"mp_weapon_3030" )
 	PrecacheWeapon( $"mp_ability_phase_rewind" )
-	PrecacheWeapon( $"mp_ability_space_elevator_tac" ) //needs more testing
+	PrecacheWeapon( $"mp_ability_space_elevator_tac" )
 	PrecacheWeapon( $"mp_weapon_sentinel" )
 
+	//_________________________
+	//CUSTOM By Colombia
+	PrecacheModel( $"mdl/creatures/spider/spider.rmdl" )
+	PrecacheModel( $"mdl/Humans/grunts/imc_grunt_lmg_corpse.rmdl" )
+	PrecacheWeapon( $"mp_ability_emote_projector" )
+	PrecacheWeapon( $"mp_ability_translocation" )
+	PrecacheWeapon( $"mp_ability_birds")
+	PrecacheModel($"mdl/Weapons/arms/pov_pilot_medium_loba.rmdl")
+	PrecacheModel($"mdl/Weapons/wrench/ptpov_wrench.rmdl")
+	PrecacheModel($"mdl/Weapons/kraber_ap_r1/ptpov_kraber_ap_r1.rmdl")
+	PrecacheWeapon( $"mp_titanweapon_flightcore_rockets")
+	//_________________________
+	
 	SV_CL_Shared_Init()
 	ClientCommands_Init()
 }
