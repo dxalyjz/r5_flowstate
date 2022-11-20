@@ -1540,35 +1540,34 @@ void function InitMenus()
 	AddPanel( privatematchmenu, "R5RMapPanel", InitR5RMapPanel )
 	AddPanel( privatematchmenu, "R5RVisPanel", InitR5RVisPanel )
 	////////
-
 	//CTF UI
-	var controlmenu = AddMenu( "CTFRespawnMenu", $"scripts/resource/ui/menus/CTF/ctfrespawnmenu.menu", InitCTFRespawnMenu )
-	var ctfvotemenu = AddMenu( "CTFVoteMenu", $"scripts/resource/ui/menus/CTF/ctfvotemenu.menu", InitCTFVoteMenu )
-	////////
-	//AIM TRAINER
-	//Main Menu
-	AddMenu( "FRChallengesMainMenu", $"scripts/resource/ui/menus/FRChallenges/mainmenu_main.menu", InitFRChallengesMainMenu )
-	
-	//Settings
-	AddMenu( "FRChallengesSettings", $"scripts/resource/ui/menus/FRChallenges/mainmenu_settings.menu", InitFRChallengesSettings )
-	
-	//History
-	AddMenu( "FRChallengesHistory", $"scripts/resource/ui/menus/FRChallenges/mainmenu_history.menu", InitChallengesHistory )
-	
-	//Weapon Selector
-	var weaponselector = AddMenu( "FRChallengesSettingsWpnSelector", $"scripts/resource/ui/menus/FRChallenges/mainmenu_settings_weaponselector.menu", InitFRChallengesSettingsWpnSelector )
-	AddPanel( weaponselector, "BuyMenu1", InitArenasBuyPanel1 )
-	AddPanel( weaponselector, "BuyMenu2", InitArenasBuyPanel2 )
-	AddPanel( weaponselector, "BuyMenu3", InitArenasBuyPanel3 )
-	AddPanel( weaponselector, "BuyMenu4", InitArenasBuyPanel4 )
-	AddPanel( weaponselector, "BuyMenu5", InitArenasBuyPanel5 )
+	AddMenu( "CTFRespawnMenu", $"scripts/resource/ui/menus/CTF/ctfrespawnmenu.menu", InitCTFRespawnMenu )
+	AddMenu( "CTFVoteMenu", $"scripts/resource/ui/menus/CTF/ctfvotemenu.menu", InitCTFVoteMenu )
 
-	//results
-	AddMenu( "FRChallengesMenu", $"scripts/resource/ui/menus/FRChallenges/challenges_results.menu", InitFRChallengesResultsMenu ) //results
 	
-	//Custom KillReplayHud
-	var killreplayhud = AddMenu( "KillReplayHud", $"scripts/resource/ui/menus/KillReplay/replayhud.menu", InitKillReplayHud )
-	///////
+	//FLOWSTATE AIM TRAINER
+		//Main Menu UI
+		AddMenu( "FRChallengesMainMenu", $"scripts/resource/ui/menus/FRChallenges/mainmenu_main.menu", InitFRChallengesMainMenu )
+		//Settings UI
+		AddMenu( "FRChallengesSettings", $"scripts/resource/ui/menus/FRChallenges/mainmenu_settings.menu", InitFRChallengesSettings )
+		//History UI
+		AddMenu( "FRChallengesHistory", $"scripts/resource/ui/menus/FRChallenges/mainmenu_history.menu", InitChallengesHistory )
+		//Weapon Selector
+		var weaponselector = AddMenu( "FRChallengesSettingsWpnSelector", $"scripts/resource/ui/menus/FRChallenges/mainmenu_settings_weaponselector.menu", InitFRChallengesSettingsWpnSelector )
+		AddPanel( weaponselector, "BuyMenu1", InitArenasBuyPanel1 )
+		AddPanel( weaponselector, "BuyMenu2", InitArenasBuyPanel2 )
+		AddPanel( weaponselector, "BuyMenu3", InitArenasBuyPanel3 )
+		AddPanel( weaponselector, "BuyMenu4", InitArenasBuyPanel4 )
+		AddPanel( weaponselector, "BuyMenu5", InitArenasBuyPanel5 )
+		//Results UI
+		AddMenu( "FRChallengesMenu", $"scripts/resource/ui/menus/FRChallenges/challenges_results.menu", InitFRChallengesResultsMenu ) //results
+		//Custom KillReplayHud
+		AddMenu( "KillReplayHud", $"scripts/resource/ui/menus/KillReplay/replayhud.menu", InitKillReplayHud )
+
+	//FLOWSTATE DM
+		//Statistics
+		AddMenu( "StatisticsUI", $"scripts/resource/ui/menus/FlowstateDM/flowstate_statistics.menu", InitStatisticsUI )
+		AddMenu( "FSDMVoteMenu", $"scripts/resource/ui/menus/FlowstateDM/flowstate_menu_vote.menu", Init_FSDM_VoteMenu )
 
 	var lobbyMenu = AddMenu( "LobbyMenu", $"resource/ui/menus/lobby.menu", InitLobbyMenu )
 	AddPanel( lobbyMenu, "PlayPanel", InitPlayPanel )
