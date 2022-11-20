@@ -37,7 +37,9 @@
 	"fire_rate"                                "4.0"
 	"impulse_force"                            "750"
 	"is_semi_auto"				                "1"
-
+	
+	"OnWeaponReload"							"OnWeaponReload_g2"
+	
 	// Behavior - Animation
 	"deployfirst_time"                          "1.42"
 	"deploy_time" 								"0.6"
