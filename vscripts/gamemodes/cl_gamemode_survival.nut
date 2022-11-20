@@ -688,8 +688,11 @@ void function SURVIVAL_PopulatePlayerInfoRui( entity player, var rui )
 	RuiTrackInt( rui, "micStatus", player, RUI_TRACK_MIC_STATUS )
 
 	ItemFlavor character = LoadoutSlot_WaitForItemFlavor( ToEHI( player ), Loadout_CharacterClass() )
-	asset classIcon      = CharacterClass_GetGalleryPortrait( character )
-
+	asset classIcon
+	if(player.GetModelName() != "mdl/Humans/class/medium/pilot_medium_loba.rmdl")
+		classIcon = CharacterClass_GetGalleryPortrait( character )
+	else
+		classIcon = $"rui/menu/character_select/lockstep/locked_portraits/locked_portrait_loba"
 	RuiSetImage( rui, "playerIcon", classIcon )
 
 	RuiSetGameTime( rui, "trackedPlayerChangeTime", Time() )
