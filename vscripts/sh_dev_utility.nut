@@ -35,10 +35,75 @@ void function ShDevUtility_Init()
 		RegisterSignal( "DEV_PreviewScreenRUI" )
 		RegisterSignal( "DEV_PreviewWorldRUI" )
 	#endif
+	RegisterSignal("Entered_WraithTT")
 }
 #endif
 
+
 #if SERVER
+void function DEV_UseLobaCharacter()
+{
+	entity player = gp()[0]
+	Message(player, "R5R Flowstate", "DEV: Loba - Ported by CaféFPS, powered by RePak.")
+	CharacterSelect_AssignCharacter( ToEHI( player ), GetAllCharacters()[5] )
+			
+	player.SetBodyModelOverride($"mdl/Humans/class/medium/pilot_medium_loba.rmdl")
+	player.SetArmsModelOverride($"mdl/Weapons/arms/pov_pilot_medium_loba.rmdl")
+	
+	player.TakeOffhandWeapon(OFFHAND_TACTICAL)
+	player.GiveOffhandWeapon("mp_ability_translocation", OFFHAND_TACTICAL)
+	
+	player.TakeOffhandWeapon(OFFHAND_MELEE)
+	player.TakeNormalWeaponByIndexNow( WEAPON_INVENTORY_SLOT_PRIMARY_2 )
+	player.GiveWeapon( "mp_weapon_loba_wolf_primary", WEAPON_INVENTORY_SLOT_PRIMARY_2 )
+	player.GiveOffhandWeapon( "melee_bolo_sword", OFFHAND_MELEE )
+}
+
+void function SetupShadowHands( bool allplayers = false)
+{
+	entity player = gp()[0]
+	if ( !IsValid( player ) )
+		return
+
+	player.TakeOffhandWeapon(OFFHAND_MELEE)
+	player.TakeNormalWeaponByIndexNow( WEAPON_INVENTORY_SLOT_PRIMARY_2 )
+	player.GiveWeapon( "mp_weapon_shadow_squad_hands_primary", WEAPON_INVENTORY_SLOT_PRIMARY_2 )
+	player.GiveOffhandWeapon( "melee_shadowsquad_hands", OFFHAND_MELEE )
+}
+
+void function SetupHeirloom( bool isDataKnife = false, bool isCombatKnife = false, bool isNessy = false, bool isLobasWolf = false)
+{
+	entity player = gp()[0]
+	if ( !IsValid( player ) )
+		return
+
+	player.TakeOffhandWeapon(OFFHAND_MELEE)
+	player.TakeNormalWeaponByIndexNow( WEAPON_INVENTORY_SLOT_PRIMARY_2 )
+
+	if(isDataKnife)
+	{
+		player.GiveWeapon( "mp_weapon_data_knife_primary", WEAPON_INVENTORY_SLOT_PRIMARY_2 )
+		player.GiveOffhandWeapon( "melee_data_knife", OFFHAND_MELEE )		
+	}else if(isCombatKnife)
+	{
+		player.GiveWeapon( "mp_weapon_combat_knife_primary", WEAPON_INVENTORY_SLOT_PRIMARY_2 )
+		player.GiveOffhandWeapon( "melee_combat_knife", OFFHAND_MELEE )		
+	}else if(isNessy)
+	{
+		player.GiveWeapon( "mp_weapon_nessy_primary", WEAPON_INVENTORY_SLOT_PRIMARY_2 )
+		player.GiveOffhandWeapon( "melee_nessy", OFFHAND_MELEE )			
+	}else if(isLobasWolf)
+	{
+		player.GiveWeapon( "mp_weapon_loba_wolf_primary", WEAPON_INVENTORY_SLOT_PRIMARY_2 )
+		player.GiveOffhandWeapon( "melee_loba_wolf", OFFHAND_MELEE )			
+	}else
+	{
+		player.GiveWeapon( "mp_weapon_bolo_sword_primary", WEAPON_INVENTORY_SLOT_PRIMARY_2 )
+		player.GiveOffhandWeapon( "melee_bolo_sword", OFFHAND_MELEE )		
+	}
+	
+}
+
 void function SetupShadowHands( bool allplayers = false)
 {
 	entity player = gp()[0]
