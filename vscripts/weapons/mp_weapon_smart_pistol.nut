@@ -16,6 +16,7 @@ function MpWeaponSmartPistol_Init()
 {
 	PrecacheParticleSystem( $"P_smartpistol_lockon_FP" )
 	PrecacheParticleSystem( $"P_smartpistol_lockon" )
+	RegisterSignal("EndFixAnimThread")
 }
 
 void function OnWeaponActivate_weapon_smart_pistol( entity weapon )
@@ -49,8 +50,15 @@ void function OnWeaponDeactivate_weapon_smart_pistol( entity weapon )
 var function OnWeaponPrimaryAttack_weapon_smart_pistol( entity weapon, WeaponPrimaryAttackParams attackParams )
 {
 	int damageFlags = weapon.GetWeaponDamageFlags()
+	
+	#if SERVER
+	if(weapon.GetWeaponClassName() == "mp_weapon_sheilaaimbot")
+		thread SheilaFixAnims(weapon)
+	#endif
+
 	return SmartAmmo_FireWeapon( weapon, attackParams, damageFlags, damageFlags )
 }
+
 
 function SmartWeaponFireSound( entity weapon, target )
 {

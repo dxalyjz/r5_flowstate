@@ -254,19 +254,16 @@ void function SonarStartGrenade( entity ent, vector position, int sonarTeam, ent
 	}
 }
 
-void function SonarEndGrenadeGrenade( entity ent, int team )
+void function SonarEndGrenadeGrenade( entity ent, int team, bool forexternaluse = false)
 {
-	if ( !IsValid( ent ) )
+	if(forexternaluse){
+		
+		if ( !IsValid( ent ) )
 		return
-
-	ent.s.inSonarTriggerCount--
-
-	if ( (ent.s.inSonarTriggerCount < file.teamSonarCount[team]) || (ent.s.inSonarTriggerCount <= 0) || (file.teamSonarCount[team] <= 0) )
+	
 		ent.HighlightDisableForTeam( team )
-
-	if ( ent.s.inSonarTriggerCount < 1 )
-	{
-		Assert ( ent in file.entitySonarHandles )
+		
+				Assert ( ent in file.entitySonarHandles )
 		if ( file.entitySonarHandles[ent].len() )
 		{
 			int statusEffectHandle = file.entitySonarHandles[ent][0]
@@ -277,6 +274,30 @@ void function SonarEndGrenadeGrenade( entity ent, int team )
 
 		if ( ent.IsPlayer() )
 			ent.SetCloakFlicker( 0, 0 )
+	} else {
+	
+		if ( !IsValid( ent ) )
+			return
+
+		ent.s.inSonarTriggerCount--
+
+		if ( (ent.s.inSonarTriggerCount < file.teamSonarCount[team]) || (ent.s.inSonarTriggerCount <= 0) || (file.teamSonarCount[team] <= 0) )
+			ent.HighlightDisableForTeam( team )
+
+		if ( ent.s.inSonarTriggerCount < 1 )
+		{
+			Assert ( ent in file.entitySonarHandles )
+			if ( file.entitySonarHandles[ent].len() )
+			{
+				int statusEffectHandle = file.entitySonarHandles[ent][0]
+				StatusEffect_Stop( ent, statusEffectHandle )
+				file.entitySonarHandles[ent].fastremovebyvalue( statusEffectHandle )
+			}
+			ent.HighlightSetTeamBitField( 0 )
+
+			if ( ent.IsPlayer() )
+				ent.SetCloakFlicker( 0, 0 )
+		}
 	}
 }
 
