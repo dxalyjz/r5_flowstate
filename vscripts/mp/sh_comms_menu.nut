@@ -362,33 +362,27 @@ bool function CommsMenu_ExecuteSelection( int wheelInputType )
 enum eOptionType
 {
 	DO_NOTHING,
-
 	COMMSACTION,
 	NEW_PING,
 	PING_REPLY,
-
 	QUIP,
 	SKYDIVE_EMOTE,
 	HEALTHITEM_USE,
 	ORDNANCE_EQUIP,
-
+	HOLOSPRAY,
 	EDITOR_MODE_ACTIVATE
 }
 
 struct CommsMenuOptionData
 {
 	int optionType
-
 	int chatPage
 	int commsAction
-
 	int pingType
-
 	int pingReply
-
 	int healType
-
-	ItemFlavor    ornull    emote
+	ItemFlavor ornull emote
+	asset Asset
 }
 
 CommsMenuOptionData function MakeOption_NoOp()
@@ -465,6 +459,17 @@ CommsMenuOptionData function MakeOption_EditorMode( int index )
 	return op
 }
 
+CommsMenuOptionData function MakeOption_HoloSpray( int index, asset Asset)
+{
+	CommsMenuOptionData op
+	op.optionType = eOptionType.HOLOSPRAY
+	op.emote = null
+	op.healType = index
+	op.Asset = Asset
+	
+	return op
+}
+
 array<CommsMenuOptionData> function BuildMenuOptions( int chatPage )
 {
 	array<CommsMenuOptionData> results
@@ -501,11 +506,21 @@ array<CommsMenuOptionData> function BuildMenuOptions( int chatPage )
 				}
 			}
 
+			//Holo sprays
+			foreach(id, emotes in GetEmotesTable())
+			{
+				if(quipsInWheel == MAX_QUIPS_EQUIPPED) break
+				
+				results.append( MakeOption_HoloSpray( id+1, emotes[0] ) ) //+1 cuz "Nice" quip, FIX ME
+				quipsInWheel++
+			}
+
 			if ( quipsInWheel == 0 && emptyQuip != null )
 			{
 				expect ItemFlavor( emptyQuip )
 				results.append( MakeOption_Quip( emptyQuip, quipsInWheel ) )
 			}
+			
 		}
 		break
 
@@ -697,6 +712,7 @@ string[2] function GetPromptsForMenuOption( int index )
 			promptTexts[1] = mode.description
 			break
 		}
+		//agregar nombres aquí para los holo sprays
 	}
 
 	return promptTexts
@@ -751,7 +767,7 @@ asset function GetIconForMenuOption( int index )
 		{
 			return GetIconForHealthItem( op.healType )
 		}
-
+		
 		case eOptionType.ORDNANCE_EQUIP:
 		{
 			if ( op.healType == -1 )
@@ -1032,7 +1048,7 @@ void function ShowCommsMenu( int chatPage )
 		RuiSetFloat3( rui, ("optionColor" + idx), iconColor )
 
 		RuiSetString( rui, ("optionCenterText" + idx), "" )
-
+			
 		if ( idx < s_currentMenuOptions.len() )
 		{
 			CommsMenuOptionData op = s_currentMenuOptions[idx]
@@ -1052,6 +1068,11 @@ void function ShowCommsMenu( int chatPage )
 					print( "setting optionCenterText" + idx + " to " + txt + "\n" )
 					RuiSetString( rui, ("optionCenterText" + idx), txt)
 				}
+			}
+			
+			if ( op.optionType == eOptionType.HOLOSPRAY )
+			{
+				RuiSetImage( rui, ("optionIcon" + idx), op.Asset )	
 			}
 		}
 
@@ -1511,7 +1532,13 @@ bool function MakeCommMenuSelection( int choice, int wheelInputType )
 			HandleQuipPick( expect ItemFlavor( op.emote ), op.healType )
 			return true
 		}
-
+		
+		case eOptionType.HOLOSPRAY:
+		{
+			HoloSpray_OnUse( choice )
+			return true
+		}
+		
 		case eOptionType.SKYDIVE_EMOTE:
 		{
 			entity player = GetLocalViewPlayer()
@@ -1592,15 +1619,16 @@ void function HandleQuipPick( ItemFlavor quip, int choice )
 
 	player.ClientCommand( "BroadcastQuip " + choice )
 
-	#if(false)
+}
 
-
-#endif
-
-	#if(false)
-
-
-#endif
+void function HoloSpray_OnUse( int choice )
+{
+	entity player = GetLocalViewPlayer()
+	EmitSoundOnEntity( player, WHEEL_SOUND_ON_EXECUTE )
+	int actualChoice = maxint(0,choice - 1)
+	player.ClientCommand( "HoloSpray_OnUse " + actualChoice )
+	
+	ActivateOffhandWeaponByIndex( OFFHAND_EQUIPMENT )
 }
 
 void function HandleCommsActionPick( int commsAction, int directionIndex )
