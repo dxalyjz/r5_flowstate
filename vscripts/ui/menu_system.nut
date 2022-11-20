@@ -91,6 +91,11 @@ void function SignalExitChallenge()
 	RunClientScript("ExitChallengeClient")
 }
 
+void function OpenWeaponSelector()
+{
+	RunClientScript("OpenTDMWeaponSelectorUI")
+}
+
 void function InitSystemPanel( var panel )
 {
 	var menu = Hud_GetParent( panel )
