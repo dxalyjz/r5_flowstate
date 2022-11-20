@@ -371,7 +371,11 @@ void function SetupDefaultDevCommandsMP()
 		SetupDevCommand( "Toggle Skybox View", "script thread ToggleSkyboxView()" )
 		SetupDevCommand( "Toggle HUD", "ToggleHUD" )
 
-		SetupDevCommand( "Melee: Equip Bolo Sword", "script thread SetupHeirloom()" )
+		SetupDevCommand( "Melee: Bolo Sword", "script thread SetupHeirloom()" )
+		SetupDevCommand( "Melee: Data Knife", "script thread SetupHeirloom(true)" )
+		SetupDevCommand( "Melee: Combat Knife", "script thread SetupHeirloom(false, true)" )
+		SetupDevCommand( "Melee: Nessy", "script thread SetupHeirloom(false, false, true)" )
+		SetupDevCommand( "Melee: Loba's Wolf", "script thread SetupHeirloom(false, false, false, true)" )
 		SetupDevCommand( "Melee: Equip Shadow Hands", "script thread SetupShadowHands()" )
 		SetupDevCommand( "Melee: Unequip", "script thread UnEquipMelee()" )		
 		
