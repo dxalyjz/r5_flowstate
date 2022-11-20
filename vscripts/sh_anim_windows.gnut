@@ -748,6 +748,7 @@ void function ClientCodeCallback_AnimWindowPrecache( asset windowSettingsAsset )
 #if CLIENT
 void function ClientCodeCallback_AnimWindowStart( ScriptAnimWindow window )
 {
+	try{
 	Assert( IsValid( window.ent ) )
 
 	var block = GetSettingsBlockForAsset( window.settingsAsset )
@@ -762,6 +763,7 @@ void function ClientCodeCallback_AnimWindowStart( ScriptAnimWindow window )
 	AnimWindowTypeInfo awti = fileLevel.animWindowTypeNameInfoMap[windowType]
 	Assert( awti.isForThisVM, "Script anim window \"" + window.windowName + "\" on animseq \"" + window.ent.GetCurrentSequenceName() + "\" is marked as " + (SERVER ? "SERVER" : "CLIENT") + " but its type (\"" + windowType + "\") is " + (SERVER ? "CLIENT" : "SERVER") + " only." )
 	awti.startFunc( window, block )
+	}catch(e420){}
 }
 #endif
 
@@ -769,6 +771,7 @@ void function ClientCodeCallback_AnimWindowStart( ScriptAnimWindow window )
 #if CLIENT
 void function ClientCodeCallback_AnimWindowTransition( ScriptAnimWindow window )
 {
+	try{
 	Assert( IsValid( window.ent ) )
 
 	var block = GetSettingsBlockForAsset( window.settingsAsset )
@@ -784,6 +787,7 @@ void function ClientCodeCallback_AnimWindowTransition( ScriptAnimWindow window )
 	Assert( awti.isForThisVM, "Script anim window \"" + window.windowName + "\" on animseq \"" + window.ent.GetCurrentSequenceName() + "\" is marked as " + (SERVER ? "SERVER" : "CLIENT") + " but its type (\"" + windowType + "\") is " + (SERVER ? "CLIENT" : "SERVER") + " only." )
 	if ( awti.transitionFunc != null )
 		awti.transitionFunc( window, block )
+	}catch(e420){}
 }
 #endif
 
@@ -791,6 +795,7 @@ void function ClientCodeCallback_AnimWindowTransition( ScriptAnimWindow window )
 #if CLIENT
 void function ClientCodeCallback_AnimWindowStop( ScriptAnimWindow window )
 {
+	try{
 	Assert( IsValid( window.ent ) )
 
 	var block = GetSettingsBlockForAsset( window.settingsAsset )
@@ -805,6 +810,7 @@ void function ClientCodeCallback_AnimWindowStop( ScriptAnimWindow window )
 	AnimWindowTypeInfo awti = fileLevel.animWindowTypeNameInfoMap[windowType]
 	Assert( awti.isForThisVM, "Script anim window \"" + window.windowName + "\" on animseq \"" + window.ent.GetCurrentSequenceName() + "\" is marked as " + (SERVER ? "SERVER" : "CLIENT") + " but its type (\"" + windowType + "\") is " + (SERVER ? "CLIENT" : "SERVER") + " only." )
 	awti.stopFunc( window, block )
+	}catch(e420){}
 }
 #endif
 
