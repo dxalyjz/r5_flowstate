@@ -198,6 +198,11 @@ global struct ClientWeaponStruct
 	vector PROTO_lastForwardAngle
 
 	bool useRapidHitbeep = false
+	
+	entity translocate_predictedInitialProjectile = null
+	entity translocate_predictedRedirectedProjectile = null
+	table ornull translocate_impactRumbleObj = null
+	bool   translocate_isADSForced = false
 }
 
 
