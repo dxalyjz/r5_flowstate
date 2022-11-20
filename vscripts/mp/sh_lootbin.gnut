@@ -34,7 +34,7 @@ global const string LOOT_BIN_MARKER_SCRIPTNAME = "survival_lootbin"
 global const string LOOT_BIN_SCRIPTNAME = "survival_lootbin_spawned"
 
 global const asset LOOT_BIN_MODEL = $"mdl/props/loot_bin/loot_bin_01_animated.rmdl"
-global const bool LOOT_BIN_CLOSABLE = false // note that they will always be closable if playlist var lootbins_infinite is set to 1
+bool LOOT_BIN_CLOSABLE = false // note that they will always be closable if playlist var lootbins_infinite is set to 1
 
 global const string SOUND_LOOT_BIN_OPEN = "Door_Lootbin_Open"
 global const string SOUND_LOOT_BIN_IDLE = "Door_Lootbin_Presence_Loop"
@@ -67,6 +67,7 @@ struct
 
 void function ShLootBin_Init()
 {
+	LOOT_BIN_CLOSABLE = GetCurrentPlaylistVarBool( "lootbins_infinite", false )
 	PrecacheModel( LOOT_BIN_MODEL )
 
 	RegisterSignal( "TryRefreshLootbinHighlights_Internal" )
@@ -181,8 +182,17 @@ void function RefreshLootBin( entity lootBin, string lootGroup, int numLootItems
 
 	// New refs
 	file.lootBinsLootInside[ lootBin ] = []
+
+	if(lootBin.GetScriptName() == "smartbin")
+	{
+		AddMultipleLootItemsToLootBin( lootBin, SURVIVAL_GetMultipleWeightedItemsFromGroup( "data_knife_vault", 3 ) )
+	}
+	else
+	{
 	array<string> newRefs = SURVIVAL_GetMultipleWeightedItemsFromGroup( lootGroup, numLootItems )
 	AddMultipleLootItemsToLootBin( lootBin, newRefs )
+	}
+	
 	lootBin.e.hasBeenOpened = false
 }
 
@@ -254,6 +264,14 @@ void function InitLootBin( entity lootbin )
 	if ( SURVIVAL_DEBUG_LOOT_BINS )
 	{
 		DebugDrawLine( lootbin.GetOrigin(), lootbin.GetOrigin() + <0, 0, 1000>, 255, 255, 255, true, 100.0 )
+	}
+
+	if(CoinFlip())
+	{
+		lootbin.SetScriptName("smartbin")
+		lootbin.SetSkin(2)
+		AddMultipleLootItemsToLootBin( lootbin, SURVIVAL_GetMultipleWeightedItemsFromGroup( "data_knife_vault", 4 ) )
+		return
 	}
 	
 	if( GetCurrentPlaylistVarBool("lootbin_loot_enable", true) == true)
@@ -386,10 +404,8 @@ void function AddMultipleLootItemsToLootBin( entity lootBin, array<string> refs 
 {
     array<string> lootToSpawn = GetLootBinContents( lootBin )
     if(lootToSpawn.len() > 0)
-    {
-        //printt("Lootbin already has contents! Clear it first before adding multiple items.")
-        return
-    }
+		ClearLootBinContents(lootBin)
+
 	int numRefs = refs.len()
 	for ( int i; i < numRefs; i++ )
 		AddLootToLootBin( lootBin, refs[ i ] )
@@ -478,7 +494,7 @@ void function HandleLootbinUse( entity lootbin, entity player )
 
 	EmitSoundOnEntity( lootbin, SOUND_LOOT_BIN_OPEN )
 
-	if ( ( LOOT_BIN_CLOSABLE || GetCurrentPlaylistVarBool( "lootbins_infinite", false ) ) && LootBin_IsOpen( lootbin ) )
+	if ( LOOT_BIN_CLOSABLE && LootBin_IsOpen( lootbin ) )
 		thread LootBin_PlayCloseSequence( lootbin )
 	else
 		thread LootBin_PlayOpenSequence( lootbin, player )
@@ -493,7 +509,7 @@ void function LootBin_PlayOpenSequence( entity lootbin, entity player )
 	CleanUpPermanentsParentedToLootbin( lootbin )
 
 	GradeFlagsSet( lootbin, eGradeFlags.IS_BUSY )
-
+	lootbin.e.lootbinusages++
 	if ( !lootbin.e.hasBeenOpened )
 	{
 		lootbin.e.hasBeenOpened = true
@@ -533,7 +549,15 @@ void function LootBin_PlayOpenSequence( entity lootbin, entity player )
 void function LootBin_PlayCloseSequence( entity lootbin )
 {
 	lootbin.EndSignal( "OnDestroy" )
-
+	
+	if(lootbin.e.lootbinusages == 3 && lootbin.GetScriptName() == "smartbin")
+	{
+		entity hotZoneBeam = StartParticleEffectInWorld_ReturnEntity(GetParticleSystemIndex( $"P_impact_exp_artillery" ), lootbin.GetOrigin(), <0,90,0> )
+		EmitSoundAtPosition( 99, lootbin.GetOrigin(),"weapon_explosion_med" )
+		lootbin.Destroy()
+		return
+	}
+	
 	CleanUpPermanentsParentedToLootbin( lootbin )
 
 	GradeFlagsSet( lootbin, eGradeFlags.IS_BUSY )
@@ -549,7 +573,7 @@ void function LootBin_PlayCloseSequence( entity lootbin )
 	GradeFlagsClear( lootbin, eGradeFlags.IS_BUSY )
 
 	// This loot will be re-created based on lootbins loot refs when bin is re-opened
-	if ( GetCurrentPlaylistVarBool( "lootbins_infinite", false ) )
+	if ( LOOT_BIN_CLOSABLE )
 	{
 		foreach( entity existingLoot in file.lootBinsSpawnedLootMap[lootbin] )
 		{
@@ -557,6 +581,8 @@ void function LootBin_PlayCloseSequence( entity lootbin )
 				existingLoot.Destroy()
 		}
 		file.lootBinsSpawnedLootMap[lootbin].clear()
+		
+		RefreshLootBin(lootbin, LootZones_GetRefForOrigin(lootbin.GetOrigin()), RandomIntRange(3,4))
 	}
 }
 
@@ -606,7 +632,7 @@ bool function LootBin_IsBusy( entity lootbin )
 #if CLIENT
 void function OnPropDynamicCreated( entity lootbin )
 {
-	if ( lootbin.GetScriptName() != LOOT_BIN_SCRIPTNAME )
+	if ( lootbin.GetScriptName() != LOOT_BIN_SCRIPTNAME && lootbin.GetScriptName() != "smartbin")
 		return
 
 	AddEntityCallback_GetUseEntOverrideText( lootbin, GetLootBinUseTextOverride )
@@ -648,11 +674,10 @@ bool function LootBin_CanUse( entity player, entity lootBin )
 	if ( LootBin_IsBusy( lootBin ) )
 		return false
 
-	bool anythingToOpen = false
-	if ( !LootBin_IsOpen( lootBin ) )
-		anythingToOpen = true
+	if ( !LOOT_BIN_CLOSABLE && LootBin_IsOpen( lootBin ) )
+		return false
 
-	return anythingToOpen
+	return true
 }
 
 #if CLIENT
@@ -664,7 +689,7 @@ string function GetLootBinUseTextOverride( entity lootbin )
 			return "#SURVIVAL_LOOTBIN_LOCKED"
 		return "#SURVIVAL_LOOTBIN_OPEN"
 	}
-	else if ( ( LOOT_BIN_CLOSABLE || GetCurrentPlaylistVarBool( "lootbins_infinite", false ) ) )
+	else if ( LOOT_BIN_CLOSABLE )
 		return "#SURVIVAL_LOOTBIN_CLOSE"
 	else
 		return ""
