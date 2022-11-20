@@ -187,7 +187,7 @@ void function SpawnDummy(vector origin, vector angles)
 
 {
     entity dummy = CreateEntity( "npc_dummie" )
-    SetSpawnOption_AISettings( dummy, "npc_training_dummy" )
+    SetSpawnOption_AISettings( dummy, "npc_dummie_combat_trainer" )
     dummy.SetOrigin( origin )
     dummy.SetAngles( angles )
 	DispatchSpawn( dummy )
