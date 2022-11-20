@@ -115,6 +115,11 @@ void function Utility_Shared_Init()
 
 void function InitWeaponScripts()
 {
+	
+	//Custom
+	MpWeaponEmoteProjector_Init()
+	MpWeaponGuidedMissile_Init()
+
 	SmartAmmo_Init()
 
 	// WEAPON SCRIPTS
@@ -181,6 +186,8 @@ void function InitWeaponScripts()
 	if(GameRules_GetGameMode() == "map_editor")
 		MpWeaponEditor_Init()
 
+	Translocation_Init()
+	
 	#if SERVER
 		//BallLightning_Init()
 	#endif
@@ -3446,8 +3453,13 @@ string function GetPlayerVoice( entity player )
 		var block = GetSettingsBlockForAsset( CharacterClass_GetSetFile( character ) )
 		return GetSettingsBlockString( block, "voice" )
 	}
+	string voice = ""
+	if(player.GetModelName() == "mdl/Humans/class/medium/pilot_medium_loba.rmdl")
+		voice = "loba"
+	else
+		voice = player.GetPlayerSettingString( "voice" )
 
-	return player.GetPlayerSettingString( "voice" )
+	return voice
 }
 
 void function SetTeam( entity ent, int team )
