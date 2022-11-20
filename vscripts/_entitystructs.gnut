@@ -403,6 +403,12 @@ global struct ServerEntityStruct
 	
 	//Flyers easteregg
 	entity ParentedPlayerToFlyer
+	
+	//Lootbins mod
+	int lootbinusages
+
+	//Arthur's revenge
+	array<entity> birdsFromThisCluster
 }
 
 global struct MeritData
@@ -727,10 +733,19 @@ global struct ServerPlayerStruct
 	//Map editor
 	PropInfo& selectedProp
 	entity currentPropEntity
-
 	EditorMode& selectedEditorMode
 	EditorMode ornull lastEditorMode
-
+	
+	//Rocketpod Weapon
+	vector guidedLaserPoint
+	
+	//Holospray
+	int holosprayChoice = 0
+	
+	//Data request
+	float lastTimeDataRequestUsed = 0
+	
+	
 }
 
 global struct ChallengeScore
@@ -834,6 +849,8 @@ global struct ServerAIStruct
 	// r5 stuff
 	array<BurnDamageStack> burnDamageStacks
 	bool isBurning
+	string lastSchedule
+	string lastAnim
 }
 
 
@@ -869,6 +886,7 @@ global struct ServerWeaponStruct
 	bool ziplineGrenadeCollided
 	entity ziplineStartModel
 	var ziplineStartPos
+	bool translocate_isADSForced
 }
 
 
@@ -928,6 +946,8 @@ global struct ServerProjectileStruct
 	vector ownerLocationDebug
 	vector savedSurfaceNormal
 	float lastTeleportTime
+	
+	array<entity> healWeaponEffects
 }
 
 // hooked up to entity.soul in code
