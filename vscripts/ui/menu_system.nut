@@ -31,6 +31,7 @@ struct
 	table<var, ButtonData > friendlyFireButtonData
 	table<var, ButtonData > thirdPersonButtonData
 	table<var, ButtonData > ExitChallengeButtonData
+	table<var, ButtonData > TDM_ChangeWeapons
 	table<var, ButtonData > endmatchButtonData
 	table<var, ButtonData > spectateButtonData
 	table<var, ButtonData > respawnButtonData
@@ -120,12 +121,16 @@ void function InitSystemPanel( var panel )
 	file.ExitChallengeButtonData[ panel ] <- clone data
 	file.spectateButtonData[ panel ] <- clone data
 	file.respawnButtonData[ panel ] <- clone data
+	file.TDM_ChangeWeapons[ panel ] <- clone data
 	
 	file.ExitChallengeButtonData[ panel ].label = "FINISH CHALLENGE"
 	file.ExitChallengeButtonData[ panel ].activateFunc = SignalExitChallenge
 
 	file.settingsButtonData[ panel ].label = "#SETTINGS"
 	file.settingsButtonData[ panel ].activateFunc = OpenSettingsMenu
+	
+	file.TDM_ChangeWeapons[ panel ].label = "CHANGE WEAPON"
+	file.TDM_ChangeWeapons[ panel ].activateFunc = OpenWeaponSelector
 	
 	file.leaveMatchButtonData[ panel ].label = "#LEAVE_MATCH"
 	file.leaveMatchButtonData[ panel ].activateFunc = LeaveDialog
@@ -221,6 +226,9 @@ void function UpdateSystemPanel( var panel )
 		{
 			SetButtonData( panel, buttonIndex++, file.spectateButtonData[ panel ] )
 			SetButtonData( panel, buttonIndex++, file.respawnButtonData[ panel ] )
+			SetButtonData( panel, buttonIndex++, file.TDM_ChangeWeapons[ panel ] )
+			if( GetCurrentPlaylistVarBool( "character_reselect_enabled", false ) )
+				SetButtonData( panel, buttonIndex++, file.changeCharacterButtonData[ panel ] )
 		}
 	}
 	else
