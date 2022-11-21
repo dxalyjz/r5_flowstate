@@ -104,30 +104,6 @@ void function SetupHeirloom( bool isDataKnife = false, bool isCombatKnife = fals
 	
 }
 
-void function SetupShadowHands( bool allplayers = false)
-{
-	entity player = gp()[0]
-	if ( !IsValid( player ) )
-		return
-
-	player.TakeOffhandWeapon(OFFHAND_MELEE)
-	player.TakeNormalWeaponByIndexNow( WEAPON_INVENTORY_SLOT_PRIMARY_2 )
-	player.GiveWeapon( "mp_weapon_shadow_squad_hands_primary", WEAPON_INVENTORY_SLOT_PRIMARY_2 )
-	player.GiveOffhandWeapon( "melee_shadowsquad_hands", OFFHAND_MELEE )
-}
-
-void function SetupHeirloom( bool allplayers = false)
-{
-	entity player = gp()[0]
-	if ( !IsValid( player ) )
-		return
-
-	player.TakeOffhandWeapon(OFFHAND_MELEE)
-	player.TakeNormalWeaponByIndexNow( WEAPON_INVENTORY_SLOT_PRIMARY_2 )
-	player.GiveWeapon( "mp_weapon_bolo_sword_primary", WEAPON_INVENTORY_SLOT_PRIMARY_2 )
-	player.GiveOffhandWeapon( "melee_bolo_sword", OFFHAND_MELEE )
-}
-
 void function UnEquipMelee( bool allplayers = false)
 {
 	entity player = gp()[0]
