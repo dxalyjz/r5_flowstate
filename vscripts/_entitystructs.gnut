@@ -688,6 +688,7 @@ global struct ServerPlayerStruct
 	float lastTimeSpectateUsed = 0
 	bool isSpectating = false
 	bool isAdmin = false
+	int ziplineUsages = 0
 	
 	//DeathRecap
 	DeathRecapDamageData DeathRecap_DataToSend
@@ -744,8 +745,6 @@ global struct ServerPlayerStruct
 	
 	//Data request
 	float lastTimeDataRequestUsed = 0
-	
-	
 }
 
 global struct ChallengeScore
