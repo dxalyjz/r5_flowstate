@@ -1,0 +1,89 @@
+// #base "_base_handgun.txt"
+// #base "_base_mags_light.txt"
+#base "_base_melee.txt"
+WeaponData
+{
+	// General
+	"printname"   									"ENERGY SWORD"
+	"shortprintname"								"ENERGY SWORD"
+	"description" 									"ENERGY SWORD"
+	"longdesc"										"ENERGY SWORD"
+
+	"fast_swap_to"									"1"
+
+	 "menu_icon"										"rui/weapon_icons/r5/weapon_p2020"
+	 "hud_icon"										"rui/weapon_icons/r5/weapon_p2020"
+
+	// "melee_angle"									"30"
+	// "melee_attack_animtime"							"0"
+	// "melee_damage"									"30"
+	// "melee_damage_heavyarmor"						"30"
+	// "melee_lunge_no_target_range"					"200"
+	// "melee_lunge_target_angle"						"30"
+	// "melee_lunge_target_range"						"200"
+	// "melee_lunge_time"								"0.35"
+	// "melee_range"									"100"
+	
+	//"dev_menu_type"									"offhand"
+	//"fire_mode"   									"offhand"
+	//"offhand_active_slot"                           "altHand"
+	// "offhand_default_inventory_slot"				"1"
+	// "offhand_keep_primary_in_hand"					"1"
+	// "offhand_holster_primary"						"0"
+	
+	"viewmodel"   									"mdl/Weapons/energy_sword/ptpov_energy_sword_new.rmdl"
+	 "playermodel" 									"mdl/weapons/p2011/w_p2011.rmdl"
+	
+	"weaponClass" 									"human"
+	// "weaponType"									"anti_titan"
+	"body_type"										"battle_rifle"
+	"fire_mode"   									"automatic"
+	"is_semi_auto"									"1"
+	//"never_drop"									"1"
+	"minimap_reveal_distance"						"1"
+	"attack_button_presses_melee"					"1"
+	"leveled_pickup"								"1"
+	"primary_fire_does_not_block_sprint"			"1"
+
+    // "allow_gibraltar_shield"                        "0"
+	// "flyoutEnabled"									"0"
+
+    "OnWeaponActivate"								"OnWeaponActivate_EnergySword"
+    "OnWeaponDeactivate"							"OnWeaponDeactivate_EnergySword"
+
+			// "melee_attack_animtime"     "1.3"
+			// "melee_lunge_time"        "*3.0"
+			// "melee_anim_1p_number"      "3"
+			// "melee_anim_3p"		        "ACT_GESTURE_MELEE_ATTACK3"
+			// "impulse_force"   			"20000"
+			// "impact_effect_table" 		"melee_human"
+			
+	"red_crosshair_range" 							"300"
+	
+	active_crosshair_count				"1"
+	rui_crosshair_index					"0"
+
+	RUI_CrosshairData
+	{
+		DefaultArgs
+		{
+			adjustedSpread				weapon_spread
+			isSprinting					player_is_sprinting
+			isReloading					weapon_is_reloading
+			teamColor					crosshair_team_color
+			isAmped						weapon_is_amped
+			crosshairMovementX          crosshair_movement_x
+			crosshairMovementY          crosshair_movement_y
+		}
+
+		Crosshair_1
+		{
+			"ui"						"ui/crosshair_circle2"
+			"base_spread"				"0"
+			Args
+			{
+				isFiring				weapon_is_firing
+			}
+		}
+	}
+}

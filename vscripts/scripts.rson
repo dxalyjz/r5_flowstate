@@ -304,6 +304,7 @@ Scripts:
 	weapons/mp_weapon_clickweapon.nut
 	weapons/mp_weapon_editor.nut
 	weapons/mp_ability_translocation.nut
+	weapons/mp_weapon_energysword.nut
 ]
 
 When: "SERVER || CLIENT"

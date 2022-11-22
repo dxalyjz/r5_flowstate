@@ -97,6 +97,9 @@ global enum eDamageSourceId
 	mp_weapon_car
 	mp_weapon_3030
 	mp_weapon_dragon_lmg
+	mp_weapon_energysword
+	mp_ability_birds
+	
 	//
 	melee_pilot_emptyhanded
 	melee_pilot_arena
@@ -558,8 +561,10 @@ void function DamageTypes_Init()
 		[ eDamageSourceId.mp_weapon_volt_smg ] 						= "#WPN_VOLT_SMG",
 		[ eDamageSourceId.mp_weapon_car ] 							= "Car SMG",
 		[ eDamageSourceId.mp_weapon_3030 ] 							= "30-30 Repeater",
+		[ eDamageSourceId.mp_weapon_energysword ] 					= "Energy Sword",
 		[ eDamageSourceId.mp_weapon_dragon_lmg ] 					= "Rampage LMG",
 		[ eDamageSourceId.mp_ability_octane_stim ] 					= "#WPN_OCTANE_STIM_SHORT",
+		[ eDamageSourceId.mp_ability_birds ] 					= "Arthur's Revenge",
 
 		[ eDamageSourceId.mp_weapon_tesla_trap ] 					= "#DEATH_TESLA_TRAP"
 

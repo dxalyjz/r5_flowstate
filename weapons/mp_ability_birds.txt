@@ -10,8 +10,8 @@ WeaponData
 	"description" 									"Arthur Revenge"
 	"longdesc" 										"Arthur Revenge"
 
-	"menu_icon"										"rui/pilot_loadout/suit/hardcover"
-	"hud_icon"										"rui/hud/tactical_icons/tactical_gibraltar"
+	"menu_icon"										"rui/flowstatecustom/arthursrevenge"
+	"hud_icon"										"rui/flowstatecustom/arthursrevenge"
 
     "readymessage"                                  "BUG IT"
     "readyhint"                                     "BUG IT"
@@ -112,7 +112,7 @@ WeaponData
 	"aimassist_disable_hipfire"						"1"
 	"aimassist_disable_ads"							"1"
 	"grenade_inherit_owner_velocity"				"1"
-	"cooldown_type"									"ammo_timed"
+	"cooldown_type"                                    "ammo_instant"
 	"toss_pullout_time"								"0.15"
 	"toss_time"										"0.9"
 	"toss_overhead_time"							"0.83"
@@ -208,37 +208,14 @@ WeaponData
 	"viewdrift_hipfire_speed_pitch"   				"0.6"
 	"viewdrift_hipfire_speed_yaw" 					"1.22"
 
-
-
-
-	MP_BASE
-	{
-			"ammo_clip_size"								"200"
-	"ammo_default_total"							"200"
-	"ammo_display"									"bar"
-	"ammo_min_to_fire"								"200"
-	"ammo_per_shot"									"200"
-	"ammo_stockpile_max"							"200"
-	"regen_ammo_refill_rate"						"10"
-	"regen_ammo_refill_start_delay"					"0.5"
-	//"ammo_no_remove_from_stockpile"					"1"
-
-		"enable_highlight_networking_on_creation"		"<KEEP_DEFAULT>"
-	}
-
-	SP_BASE
-	{
-			"ammo_clip_size"								"200"
-	"ammo_default_total"							"200"
-	"ammo_display"									"bar"
-	"ammo_min_to_fire"								"200"
-	"ammo_per_shot"									"200"
-	"ammo_stockpile_max"							"200"
-	"regen_ammo_refill_rate"						"10"
-	"regen_ammo_refill_start_delay"					"0.5"
-
-		"enable_highlight_networking_on_creation"		"1"
-	}
+		"ammo_clip_size"                                   "400"
+        "ammo_default_total"                            "400"
+        "ammo_display"                                    "bar"
+        "ammo_min_to_fire"                                "100"
+        "ammo_per_shot"                                    "100"
+        "ammo_stockpile_max"                            "400"
+        "regen_ammo_refill_rate"                        "5"
+        "regen_ammo_refill_start_delay"                    "0.0"
 
 	// Bob
 

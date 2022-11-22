@@ -162,7 +162,9 @@ void function SV_CL_Init()
 	ShCarePackage_Init()
 	ShWeaponInspect_Init()
 	Consumable_Init()
-
+	
+	MpWeaponEnergySword_Init()
+	
 	ShWarpGates_Init()
 
 	Sh_Loot_Vault_Panel_Init()

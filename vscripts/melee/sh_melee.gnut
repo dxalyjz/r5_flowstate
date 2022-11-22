@@ -418,7 +418,16 @@ void function CodeCallback_OnMeleePressed( entity attacker, entity meleeInputWea
 	#endif
 	
 	attacker.PlayerMelee_StartAttack( PLAYER_MELEE_STATE_HUMAN_KICK_ATTACK )
-
+	
+	if(attacker.GetActiveWeapon( eActiveInventorySlot.mainHand ).GetWeaponClassName() == "mp_weapon_energysword" && !meleeAttackWeapon.HasMod( "energysword" ))
+		{
+			meleeAttackWeapon.AddMod( "energysword" )	
+		}
+	else if ( meleeAttackWeapon.HasMod( "energysword" ) )
+		{
+			meleeAttackWeapon.RemoveMod( "energysword" )
+		}
+		
 	// DOOR BUSTING PROTOTYPE
 	// todo(dw): use better door detection logic
 	{
@@ -477,18 +486,58 @@ void function CodeCallback_OnMeleeStartActivity( entity attacker, entity meleeAt
 	if ( !movestunBlocked )
 	{
 		entity lungeTarget = GetMeleeAttackLungeTarget( attacker, meleeAttackWeapon )
-
-		if ( IsValid( lungeTarget ) )
+		if ( IsValid( lungeTarget ) && lungeTarget.IsPlayer() || IsValid( lungeTarget ) && lungeTarget.IsNPC())
 		{
-			bool lungeStartWasSuccessful = attacker.Lunge_SetTargetEntity( lungeTarget )
+			bool lungeStartWasSuccessful
+			
+			if(!meleeAttackWeapon.HasMod( "energysword" ))
+			{
+				lungeStartWasSuccessful = attacker.Lunge_SetTargetEntity( lungeTarget )
+				if ( lungeStartWasSuccessful && attacker.IsOnGround() )
+				{
+					attacker.Lunge_LockPitch( true )
+				}
+			}
+			else
+			{
+				attacker.Lunge_SetTargetPosition( <lungeTarget.GetOrigin().x, lungeTarget.GetOrigin().y, lungeTarget.GetWorldSpaceCenter().z - 52 > +  AnglesToForward(lungeTarget.GetAngles())*-50)
+				attacker.Lunge_SetSmoothTime( 0 )
+				attacker.Lunge_EnableFlying()
+				attacker.Lunge_SetMaxEndSpeed(100)
+				if(attacker.IsOnGround())
+					attacker.Lunge_LockPitch( true )
 
-			if ( lungeStartWasSuccessful && attacker.IsOnGround() )
-				attacker.Lunge_LockPitch( true )
+				#if SERVER
+				DoDamage_EnergySword(attacker, meleeAttackWeapon, lungeTarget)
+				#endif
+			}
 		}
 	}
-}
+}	
 #endif
 
+#if SERVER
+void function DoDamage_EnergySword(entity attacker, entity meleeAttackWeapon, entity lungeTarget)
+{
+	string weaponName = meleeAttackWeapon.GetWeaponClassName()
+
+	int damageAmount     = meleeAttackWeapon.GetDamageAmountForArmorType( lungeTarget.GetArmorType() )
+	int damageScriptType = meleeAttackWeapon.GetWeaponDamageFlags()
+	int damageType       = DMG_MELEE_ATTACK
+	int damageSourceId   = (weaponName in eDamageSourceId ? eDamageSourceId[weaponName] : eDamageSourceId.damagedef_unknownBugIt)
+	vector damageOrigin  = lungeTarget.GetOrigin()
+	vector damageForce   = AnglesToForward( attacker.EyeAngles() ) * meleeAttackWeapon.GetWeaponDamageForce()
+
+	table damageTable = {
+		scriptType = meleeAttackWeapon.GetWeaponDamageFlags(),
+		damageType = damageType,
+		damageSourceId = damageSourceId,
+		origin = damageOrigin,
+		force = Vector(0,0,0)
+	}
+	lungeTarget.TakeDamage( 420, attacker, attacker, damageTable )	
+}
+#endif
 
 #if SERVER || CLIENT
 void function CodeCallback_OnMeleeHeld( entity player, entity weapon )
@@ -513,7 +562,10 @@ void function CodeCallback_OnMeleeAttackAnimEvent( entity attacker, entity melee
 
 	if ( !attacker.PlayerMelee_IsAttackActive() )
 		return // (dw): see R5DEV-53886
-
+	
+	if ( meleeAttackWeapon.GetWeaponClassName() == "melee_energy_sword" ) 
+		return
+	
 	Assert( attacker.PlayerMelee_GetState() == PLAYER_MELEE_STATE_HUMAN_KICK_ATTACK )
 	Assert( !attacker.PlayerMelee_GetAttackHitEntity() )
 
@@ -545,7 +597,7 @@ void function CodeCallback_OnMeleeAttackAnimEvent( entity attacker, entity melee
 	// Impact effects
 	if ( !attacker.PlayerMelee_IsAttackActive() )
 		return
-		
+	
 	impactEffectFlags = impactEffectFlags
 
 	attacker.DispatchImpactEffects( target,
@@ -595,8 +647,8 @@ void function CodeCallback_OnMeleeAttackAnimEvent( entity attacker, entity melee
 		//if ( IsHumanSized( target ) )
 		//	target.SetContinueAnimatingAfterRagdoll( true )
 
-		int TEMP_targetHealthBefore         = target.GetHealth() // todo(dw): remove
-		bool TEMP_isTargetBleedingOutBefore = Bleedout_IsBleedingOut( target ) // todo(dw): remove
+		// int TEMP_targetHealthBefore         = target.GetHealth() // todo(dw): remove
+		// bool TEMP_isTargetBleedingOutBefore = Bleedout_IsBleedingOut( target ) // todo(dw): remove
 
 		table damageTable = {
 			scriptType = meleeAttackWeapon.GetWeaponDamageFlags(),

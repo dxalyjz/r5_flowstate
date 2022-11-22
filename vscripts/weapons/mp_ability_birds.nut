@@ -15,7 +15,7 @@ global function MpBirdsTactical_Init
 
 ///CONFIGS///
 bool BIRD_TRIGGER_DEBUG = true
-float ARTHUR_DAMAGE = 4.0
+float ARTHUR_DAMAGE = 5.0
 float BIRDS_RANGE = 150.0
 ///////////
 
@@ -143,8 +143,8 @@ void function Lift_OnPlayerNPCTossGrenade_Common( entity weapon, entity frag )
 		if ( projectileSound != "" )
 			EmitSoundOnEntity( frag, projectileSound )
 
-		entity fxID = StartParticleEffectOnEntity_ReturnEntity( frag, GetParticleSystemIndex( $"P_ar_holopilot_trail" ), FX_PATTACH_ABSORIGIN_FOLLOW, -1 )
-		entity fxID2 = StartParticleEffectOnEntity_ReturnEntity( frag, GetParticleSystemIndex( $"P_ar_holopilot_trail" ), FX_PATTACH_ABSORIGIN_FOLLOW, -1 )
+		//entity fxID = StartParticleEffectOnEntity_ReturnEntity( frag, GetParticleSystemIndex( $"P_ar_holopilot_trail" ), FX_PATTACH_ABSORIGIN_FOLLOW, -1 )
+		//entity fxID2 = StartParticleEffectOnEntity_ReturnEntity( frag, GetParticleSystemIndex( $"P_ar_holopilot_trail" ), FX_PATTACH_ABSORIGIN_FOLLOW, -1 )
 
 	#endif
 }
@@ -399,7 +399,7 @@ void function playertakingdamageovertime(entity ent, entity bird)
 {
 	while(IsValid(bird)) 
 	{
-		ent.TakeDamage( ARTHUR_DAMAGE, null, null, { damageSourceId = eDamageSourceId.bubble_shield, damageType = DMG_BURN } )
+		ent.TakeDamage( ARTHUR_DAMAGE, bird.GetOwner(), bird.GetOwner(), { damageSourceId = eDamageSourceId.mp_ability_birds, damageType = DMG_BURN } )
 		wait 0.4
 	}
 		
@@ -465,6 +465,7 @@ void function CreateBird_weapon_birds( entity projectile )
 	bird.SetMaxHealth(100)
 	bird.SetHealth(100)
 	bird.SetDeathNotifications(true)
+	bird.SetOwner(owner)
 	DispatchSpawn( bird )
 	thread fxOnPlacedBird(bird)
 	AddEntityCallback_OnDamaged( bird, Birds_OnDamaged) 
@@ -657,8 +658,8 @@ void function fxOnPlacedBird(entity bird)
 void function TimedCustomHighlight(entity player, entity hitEnt, float scanTime = 4)
 //Thx pogass
 {
-    SonarStartGrenade( hitEnt, hitEnt.GetOrigin(), player.GetTeam(), player )
+    Highlight_SetEnemyHighlight( hitEnt, "survival_enemy_skydiving" )
     wait scanTime
-    SonarEndGrenadeGrenade( hitEnt, player.GetTeam(), true)
+    Highlight_ClearEnemyHighlight( hitEnt )
 }
 #endif
