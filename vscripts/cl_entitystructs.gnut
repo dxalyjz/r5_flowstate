@@ -165,6 +165,7 @@ global struct ClientPlayerStruct
 	
 	EditorMode& selectedEditorMode
 	EditorMode ornull lastEditorMode
+	int ziplineUsages = 0
 }
 
 
