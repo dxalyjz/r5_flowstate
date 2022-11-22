@@ -500,7 +500,7 @@ void function CodeCallback_OnMeleeStartActivity( entity attacker, entity meleeAt
 			}
 			else
 			{
-				attacker.Lunge_SetTargetPosition( <lungeTarget.GetOrigin().x, lungeTarget.GetOrigin().y, lungeTarget.GetWorldSpaceCenter().z - 52 > +  AnglesToForward(lungeTarget.GetAngles())*-50)
+				attacker.Lunge_SetTargetPosition( <lungeTarget.GetOrigin().x, lungeTarget.GetOrigin().y, lungeTarget.GetWorldSpaceCenter().z - 52 > +  AnglesToForward(attacker.GetAngles())*-50)
 				attacker.Lunge_SetSmoothTime( 0 )
 				attacker.Lunge_EnableFlying()
 				attacker.Lunge_SetMaxEndSpeed(100)

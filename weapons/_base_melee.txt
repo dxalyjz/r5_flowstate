@@ -46,7 +46,7 @@ WeaponData
 			"impact_effect_table" 		"melee_human"
 			
 			"melee_anim_1p_number"      "2"
-			"melee_anim_3p"		        "ACT_GESTURE_MELEE_ATTACK3"
+			"melee_anim_3p"		        "ACT_GESTURE_MELEE_ATTACK3" //!FIXME
 		}
 	}
 }
