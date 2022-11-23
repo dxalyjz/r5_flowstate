@@ -1601,6 +1601,11 @@ void function SetupSurvivalLoot( var categories )
 		return	
 	}
 	
+	if (stringCats.contains("heirloom_custom"))
+	{
+		SetupCustomHeirlooms()
+		return	
+	}	
 	// turn menu strings into real category enums
 	array<int> catTypes
 	foreach( string cat in stringCats )
@@ -1627,6 +1632,16 @@ void function SetupSurvivalLoot( var categories )
 	}
 }
 
+void function SetupCustomHeirlooms()
+{
+	RunUIScript( "SetupDevCommand", "Melee: Bolo Sword", "script thread SetupHeirloom()" )
+	RunUIScript( "SetupDevCommand", "Melee: Data Knife", "script thread SetupHeirloom(true)" )
+	RunUIScript( "SetupDevCommand", "Melee: Combat Knife", "script thread SetupHeirloom(false, true)" )
+	RunUIScript( "SetupDevCommand",  "Melee: Nessy", "script thread SetupHeirloom(false, false, true)" )
+	RunUIScript( "SetupDevCommand", "Melee: Loba's Wolf", "script thread SetupHeirloom(false, false, false, true)" )
+	RunUIScript( "SetupDevCommand", "Melee: Equip Shadow Hands", "script thread SetupShadowHands()" )
+	RunUIScript( "SetupDevCommand", "Melee: Unequip", "script thread UnEquipMelee()" )		
+}
 void function SetupCustomLoot( var categories, bool isAttachment = false)
 {
 	string cats              = expect string( categories )

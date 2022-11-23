@@ -1,13 +1,13 @@
 WeaponData
 {
 	// General
-	"printname"   									"Throwing Knife"
-	"shortprintname"								"Throwing Knife"
-	"description" 									"Throwing Knife"
-	"longdesc" 										"Throwing Knife"
+	"printname"   									"DECOY GRENADE"
+	"shortprintname"								"DECOY GRENADE"
+	"description" 									"Simulated gunfire to confuse enemies"
+	"longdesc" 										"Simulated gunfire to confuse enemies"
 
-	"menu_icon"										"rui/customemotes/amogusred"
-	"hud_icon"										"rui/customemotes/amogusred"
+	"menu_icon"										"rui/ordnance_icons/grenade_arc"
+	"hud_icon"										"rui/ordnance_icons/grenade_arc"
 
 	"weapon_type_flags"								"WPT_GRENADE"
 	"weaponClass" 									"human"
@@ -19,9 +19,7 @@ WeaponData
 	"leveled_pickup"								"1"
 	"dev_menu_type"									"offhand"
 	"show_grenade_indicator"						"1"
-	"show_grenade_indicator_to_owner"				"1"
-    "hide_when_holstered"							"0"
-    "deploy_allow_ads"                              "1"
+    "hide_when_holstered"							"1"
 
     "does_not_interrupt_cloak"						"1"
     "ads_dof_disable"								"1"
@@ -32,26 +30,25 @@ WeaponData
 	"OnWeaponTossPrep"								"Grenade_OnWeaponTossPrep"
 	"OnWeaponTossCancel"							"Grenade_OnWeaponTossCancelDrop"
 	"OnWeaponDeactivate"							"Grenade_OnWeaponDeactivate"
-	//"OnWeaponActivate"							    "OnWeaponActivate_weapon_throwingknife"
-	//"OnProjectileCollision"							"OnProjectileCollision_weapon_throwingknife"
+	"OnProjectileCollision"							"OnProjectileCollision_weapon_decoy_audio_grenade"
 
 	// Menu Stats
 
 	// Models
-	"viewmodel"										"mdl/Weapons/ptpov_throwingknife/ptpov_throwingknife.rmdl"
-	"playermodel"									"mdl/weapons/combat_knife/w_combat_knife.rmdl"
+	"viewmodel"										"mdl/weapons/shuriken/ptpov_shuriken_held.rmdl"
+	"playermodel"									"mdl/weapons/shuriken/w_shuriken.rmdl"
 	"projectilemodel"								"mdl/weapons/shuriken/w_shuriken.rmdl"
-	"projectile_lifetime" 							"15"
 
 	"offhand_default_inventory_slot"				"0"
 
 	"zoom_effects"									"0"
-	"ads_move_speed_scale"							"1"
+	"ads_move_speed_scale"							"0.55"
 
 	// Effects
 	"bounce_effect_table"							"bounce_arc"
 	"impact_effect_table" 							"exp_emp"
-	"projectile_trail_effect_0" 					"wpn_grenade_frag_blue"
+	"projectile_trail_effect_0" 					"z_tmp_glow_loop"
+	//"projectile_trail_effect_0" 					"wpn_grenade_frag_blue"
 	"vortex_impact_effect"							"P_impact_exp_emp_med_default"
 	"vortex_absorb_effect"							"wpn_vortex_projectile_frag_FP"
 	"vortex_absorb_effect_third_person"				"wpn_vortex_projectile_frag"
@@ -60,15 +57,13 @@ WeaponData
 	"projectile_adjust_to_gun_barrel"				"0"
 	"projectile_adjust_to_hand"						"1"
 
-	//"grenade_arc_indicator_show_from_hip"			"1"
-    //"grenade_arc_indicator_bounce_count"			"1"
-    //"grenade_arc_indicator_effect"				"P_arc_red"
-    //"grenade_arc_indicator_effect_first"			"P_arc_red"
-    //"grenade_arc_impact_indicator_effect"			"P_arc_red_end"
+	"grenade_arc_indicator_show_from_hip"			"0"
+	"grenade_arc_indicator_bounce_count"			"1"
+	"grenade_arc_indicator_effect"					"P_arc_blue"
+	"grenade_arc_indicator_effect_first"			"P_arc_blue"
+	"grenade_arc_impact_indicator_effect"			"P_arc_blue_end"
 
-	"critical_hit"									"1"
-
-    "damage_headshot_scale"							"3"
+	"critical_hit"									"0"
 
 	// Sounds
 	"sound_throw_1p"								"Weapon_Arcstar_Throw_1P"
@@ -77,23 +72,77 @@ WeaponData
 	"sound_deploy_3p"								"weapon_arcstar_armback_3P"
 	"sound_dryfire"									"Survival_UI_Ability_NotReady"
 	"sound_cook_warning"							"weapon_arcstar_explosivewarningbeep"
-	//"battle_chatter_event"							"bc_arcStar"
+	"battle_chatter_event"							"bc_frag"
 
 	// Damage - When Used by Players
 	"damage_type" 									"burn"
 	"damage_near_distance"							"1000"
 	"damage_far_distance" 							"3000"
-	"damage_near_value"   							"100"
-	"damage_far_value"								"100"
-	"damage_near_value_titanarmor"					"100"
-	"damage_far_value_titanarmor" 					"100"
-	"impulse_force"   								"0"
-	"damage_flags"									"DF_BULLET"
+	"damage_near_value"   							"30"
+	"damage_far_value"								"30"
+	"damage_near_value_titanarmor"					"30"
+	"damage_far_value_titanarmor" 					"30"
+	"impulse_force"   								"3000"
+	"explosion_shake_radius"						"500"
+	"explosion_shake_amplitude"						"20"
+	"explosion_shake_frequency"						"45"
+	"explosion_shake_duration"						"0.25"
+	"damage_flags"									"DF_RAGDOLL | DF_EXPLOSION | DF_ELECTRICAL"
+
+	"explosion_damage"								"70"
+	"explosion_damage_heavy_armor"					"70"
+	"explosion_inner_radius"  						"72"
+	"explosionradius" 								"350"
 
 	"projectile_killreplay_enabled"					"1"
 
-	"fire_mode"   									"automatic"
-	"is_semi_auto"									"1"
+	"damage_shield_scale"                           "3"
+
+	MP_BASE
+	{
+		"fire_mode"   									"automatic"
+		"is_semi_auto"									"1"
+		"ammo_display"									"bar"
+		"ammo_stockpile_max"							"200"
+		"ammo_clip_size"   								"200"
+		"ammo_default_total"							"200"
+		"ammo_per_shot"									"200"
+		"ammo_min_to_fire"								"200"
+
+		// Regen Ammo
+		"regen_ammo_refill_rate"						"16.0"
+		"regen_ammo_refill_start_delay"					"0.0"
+
+		"npc_explosion_damage"							"50"
+		"npc_explosion_damage_heavy_armor"				"350"
+
+		"enable_highlight_networking_on_creation"		"<KEEP_DEFAULT>"
+
+		"sound_weapon_ready"							"HUD_ordinance_meter_replenished_1P"
+	}
+
+	SP_BASE
+	{
+		"fire_mode"										"offhand"
+		"is_semi_auto"									"<KEEP_DEFAULT>"
+
+		"npc_explosion_damage"							"25"
+		"npc_explosion_damage_heavy_armor"				"350"
+
+		"ammo_clip_size"   								"4"
+		"ammo_default_total"							"1"
+		"ammo_display"									"count"
+		"ammo_min_to_fire"								"1"
+		"ammo_per_shot"									"1"
+		"ammo_stockpile_max"							"4"
+		"regen_ammo_refill_rate"						"0"
+		"regen_ammo_refill_start_delay"					"0.0"
+
+		"enable_highlight_networking_on_creation"		"1"
+
+		"sound_weapon_ready"							"HUD_ordinance_meter_replenished_SP"
+	}
+
 
 	"dof_zoom_nearDepthStart"						"0.0"
 	"dof_zoom_nearDepthEnd"							"0.0"
@@ -108,24 +157,20 @@ WeaponData
     "start_fuse_on_launch"                          "0"
 	"grenade_ignition_time"                         "2.8"
 	"fire_rate"   									"1.0"
-	"deploy_time" 									"0" //Driven by animation
+	"deploy_time" 									"0.5"
 	"vortex_refire_behavior"  						"grenade"
-
+	"allow_empty_fire"								"0"
 	"reload_enabled"  								"0"
-	"allow_empty_click"   							"0"
+	"allow_empty_click"   							"1"
 	"empty_reload_only"   							"0"
 	"trigger_snipercam"   							"0"
-	"allow_headshots" 								"1"
-	"headshot_distance" 							"2500"
-
-	"grenade_bounce_vel_frac_shallow"				"0"
-	"grenade_bounce_vel_frac_sharp"					"0"
-	"grenade_bounce_vel_frac_along_normal"			"0"
-	"grenade_bounce_randomness"						"0"
-	"grenade_bounce_extra_vertical_randomness"		"0"
-	"grenade_roll_vel_frac_per_second"				"0"
-	"grenade_touch_triggers_on_impact"				"1"
-
+	"allow_headshots" 								"0"
+	"grenade_bounce_vel_frac_shallow"				"0.53"
+	"grenade_bounce_vel_frac_sharp"					"0.32"
+	"grenade_bounce_vel_frac_along_normal"			"0.5"
+	"grenade_bounce_randomness"						"0.2"
+	"grenade_bounce_extra_vertical_randomness"		"0.2"
+	"grenade_roll_vel_frac_per_second"				"0.1"
 	"aimassist_disable_hipfire"						"1"
 	"aimassist_disable_ads"							"1"
 
@@ -133,19 +178,16 @@ WeaponData
 	"toss_time"										"0.4"
 	"toss_overhead_time"							"0.7"
 
-	"projectile_launch_speed"						"3700"
+	"projectile_launch_speed"						"2200"
 	"projectile_launch_pitch_offset"				"2"
-	"projectile_first_person_offset_fraction"		"0.5"
-	"projectile_muzzle_offset_decay_max_time"		"0.1"
-	"projectile_predict_move_to_impact"				"false"
+	"projectile_first_person_offset_fraction"		"2"
 	"projectile_gravity_scale"						"1.6"
-	"grenade_ignore_planted_grenades"               "1"
 
-	"grenade_disc_throw"							"0"
+	"grenade_disc_throw"							"1"
 	"grenade_death_drop_velocity_scale"				"0.05"
 	"grenade_death_drop_velocity_extraUp"			"0.10"
 
-	"projectile_inherit_owner_velocity_scale"		"0"
+	"projectile_inherit_owner_velocity_scale"		"1.0"
 
 	"stick_pilot"                                   "1"
 	"stick_titan"                                   "1"
@@ -154,7 +196,7 @@ WeaponData
 
 	// Spread
 
-	"ammo_suck_behavior"							"primary_weapons"
+	"ammo_suck_behavior"							"offhand_weapons"
 
 	// View Kick
 	"viewkick_spring" 								"pistol"
@@ -279,45 +321,9 @@ WeaponData
 	// WeaponED Unhandled Key/Values and custom script Key/Values
 	"fire_anim_rate"  								"1"
 	//"sprintcycle_time"								".55"
-	"ammo_clip_size"								"1"
-	//"ammo_default_total"							"1"
-	"ammo_display"									"count"
-
-	//Infinite Ammo
-    "uses_ammo_pool"								"0"
-	"ammo_min_to_fire"								"1"
-	"ammo_per_shot"									"1"
-	//"ammo_stockpile_max"							"1"
-	"ammo_no_remove_from_stockpile"					"1"
-
-    "allow_empty_fire"								"1"
-    "regen_ammo_refill_rate"						"1"
-    "regen_ammo_refill_start_delay"					"0.0"
-
-    "ammo_default_total"							"500"
-    "ammo_stockpile_max"                            "420"
 
 	Mods
-	{	
-		challenges_infinite_arcstars
-		{
-			"ammo_stockpile_max"							"1"
-			"ammo_clip_size"   								"1"
-			"ammo_default_total"							"1"
-			"ammo_per_shot"									"1"
-			"ammo_min_to_fire"								"1"
-
-			// Regen Ammo
-			"regen_ammo_refill_rate"						"2"
-			"regen_ammo_refill_start_delay"					"0.0"
-			"fire_rate"   									"2"
-			"explosion_damage"								"0"
-			"damage_near_value"   							"69"
-			"damage_far_value"								"69"
-			"damage_near_value_titanarmor"					"69"
-			"damage_far_value_titanarmor" 					"69"
-		}
-		
+	{
 		sp_disable_arc_indicator
 		{
 			grenade_arc_indicator_bounce_count				"0"

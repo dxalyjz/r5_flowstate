@@ -17,7 +17,7 @@ WeaponData
 	"hud_icon"										"rui/weapon_icons/r5/weapon_eva8"
 	
 	"fire_mode"   									"automatic"
-	"is_semi_auto"									"1"
+	"is_semi_auto"									"0"
 
 	"OnWeaponActivate"								"OnWeaponActivate_cindershot"
 	"OnWeaponDeactivate"							"OnWeaponDeactivate_cindershot"
@@ -44,8 +44,8 @@ WeaponData
 	"stat_rof"										"34"
 
 	// Models
-	"viewmodel"   									"mdl/weapons/w1128/ptpov_w1128.rmdl"
-	"playermodel" 									"mdl/weapons/w1128/w_w1128.rmdl"
+	"viewmodel"   									"mdl/Weapons/rocketpod_weapon/ptpov_weapon_rocketpod.rmdl"
+	"playermodel" 									"mdl/Weapons/rocketpod_weapon/ptpov_weapon_rocketpod.rmdl"
 
 	// Effects
 	"tracer_effect"   								"weapon_tracers_shotgun"
@@ -55,28 +55,32 @@ WeaponData
 
 	"chroma_color"									".5 .3 1"
 
-	"projectile_lifetime" 							"30.0"
-	"impact_effect_table" 							"exp_emp"
+	"projectile_lifetime" 							"100.0"
+	"impact_effect_table" 							"exp_rocket_dumbfire"
 	"vortex_absorb_effect"							"wpn_vortex_projectile_shotgun_FP"
 	"vortex_absorb_effect_third_person"				"wpn_vortex_projectile_shotgun"
 	"vortex_absorb_sound"							"Vortex_Shield_AbsorbBulletSmall"
 	"vortex_absorb_sound_1P_VS_3P"					"Vortex_Shield_AbsorbBulletSmall_1P_VS_3P"
 	"projectile_adjust_to_gun_barrel"				"1"
 
-	"sound_dryfire"									"shotgun_dryfire"
-	"sound_pickup"									"wpn_pickup_Rifle_1P"
-	"fire_sound_1_player_1p"						"weapon_softball_fire_1p"
-	"fire_sound_1_player_3p"						"weapon_softball_fire_3p"
-	"fire_sound_1_npc"								"weapon_softball_fire_npc"
-	"sound_zoom_in"									"Weapon_EVA8_ADS_In"
-	"sound_zoom_out"								"Weapon_EVA8_ADS_Out"
 
-	"low_ammo_sound_name_1"							"Softball_LowAmmo_Shot1"
-	"low_ammo_sound_name_2"							"Softball_LowAmmo_Shot2"
-	"low_ammo_sound_name_3"							"Softball_LowAmmo_Shot3"
+	// "low_ammo_sound_name_1"							""
+	// "low_ammo_sound_name_2"							""
+	// "low_ammo_sound_name_3"							""
+	
+	// Sounds
+	"fire_sound_1_player_1p"						"bangalore_lauch_smoke_grenade_1p"
+	"fire_sound_1_player_3p"						"bangalore_lauch_smoke_grenade_3p"
+	
+	"sound_throw_1p"								"bangalore_lauch_smoke_grenade_1p"
+	"sound_deploy_1p"								"bangalore_prep_smoke_grenade_1p"
+	"sound_throw_3p"								"bangalore_lauch_smoke_grenade_3p"
+	"sound_deploy_3p"								"bangalore_prep_smoke_grenade_3p"
+	"sound_grenade_projectile"						"Bangalore_Ultimate_Whoosh"
+	"sound_dryfire"									""
 
-	"projectilemodel" 								"mdl/weapons/bullets/mgl_grenade.rmdl"
-	"projectile_trail_effect_0" 					"P_plasma_proj_LG_DLight"
+	"projectilemodel" 								"mdl/Weapons/grenades/w_bangalore_canister_gas_projectile.rmdl"
+	"projectile_trail_effect_0" 					"P_SmokeScreen_FD_trail"
 	"projectile_launch_speed"						"2500"
 
 
@@ -138,12 +142,14 @@ WeaponData
 	"npc_max_burst"									"1"
 	"npc_rest_time_between_bursts_min"				"0.5"
 	"npc_rest_time_between_bursts_max"				"0.7"
-
+	
+	"viewmodel_offset_hip"							"4 3 0"
 	"viewmodel_offset_ads"							"0 4.5 0"
-	"dof_zoom_nearDepthStart"						"0.5"
-	"dof_zoom_nearDepthEnd"							"5.0"
+	
+	"dof_zoom_nearDepthStart"						"-0.5"
+	"dof_zoom_nearDepthEnd"							"5.05"
 	"dof_nearDepthStart"							"0.0"
-	"dof_nearDepthEnd"								"0.0"
+	"dof_nearDepthEnd"							    "0.0"
 
 	// Behavior
 	"fire_rate"   									"2.0"
@@ -222,7 +228,7 @@ WeaponData
 	    {
 	    }
 
-	survival_finite_ammo
+		survival_finite_ammo
 		{
             "ammo_default_total"			"200"
             "ammo_stockpile_max"			"200"
@@ -236,16 +242,16 @@ WeaponData
                          
         bouncepls
 		{
-		"projectile_ricochet_max_count"					"1"
-		"bolt_bounce_frac" "1"
-		"projectile_bounce_damage_reduction_scale"		"0.5"
-		"projectile_speed_reduction_factor"	 			"0"
-		"projectile_damages_owner"						"0"
+			// "projectile_ricochet_max_count"					"1"
+			// "bolt_bounce_frac" "1"
+			// "projectile_bounce_damage_reduction_scale"		"0.5"
+			// "projectile_speed_reduction_factor"	 			"0"
+			// "projectile_damages_owner"						"0"
 		}
          
         dontdoeffectonimpact
 		{
-		"impact_effect_table" 							"exp_energy_ar_charged"
+			// "impact_effect_table" 							"exp_energy_ar_charged"
 		}			
          
 

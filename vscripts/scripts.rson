@@ -880,7 +880,9 @@ Scripts:
 	weapons/mp_weapon_sheila.nut
 	weapons/mp_ability_birds.nut
 	weapons/mp_titanweapon_flightcore_rockets.nut
-	
+	weapons/mp_weapon_heatwave.nut
+	weapons/mp_weapon_plasmapistol.nut
+
 	sh_clientmusic.gnut
 
 	sh_waypoints.gnut

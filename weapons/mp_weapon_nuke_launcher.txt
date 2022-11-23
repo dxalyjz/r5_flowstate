@@ -1,40 +1,47 @@
-#base "_base_shotgun.txt"
+#base "_base_assault_rifle.txt"
+#base "_base_barrels_large.txt"
+#base "_base_stocks_sniper.txt"              
+#base "_base_mags_energy.txt"
+      
+
 WeaponData
-//By Colombia. Based on Halo Infinite Cindershot and Titanfall2 scripts.
 {
 	// General
-	"printname"   									"EGGL - 1"
-	"shortprintname"								"EGGL - 1"
-	"description" 									"Guided energy grenades"
-	"longdesc"										"Guided energy grenades"
+	"printname"   									"Nuke Launcher"
+	"shortprintname"								"Nuke Launcher"
+	"description" 									"When you need that thing over there very dead"
+	"longdesc"										"When you need that thing over there very dead"
 
 	"weapon_type_flags"								"WPT_PRIMARY"
 	"ammo_pool_type"								"special"
-	
-	"weaponClass" 									"human"
-	
-	"menu_icon"										"rui/weapon_icons/r5/weapon_eva8"
-	"hud_icon"										"rui/weapon_icons/r5/weapon_eva8"
-	
+
+	"menu_icon"										"rui/weapon_icons/r5/weapon_energy_ar"
+	"hud_icon"										"rui/weapon_icons/r5/weapon_energy_ar"
+
 	"fire_mode"   									"automatic"
-	"is_semi_auto"									"1"
 
-	"OnWeaponActivate"								"OnWeaponActivate_cindershot"
-	"OnWeaponDeactivate"							"OnWeaponDeactivate_cindershot"
-	"OnWeaponPrimaryAttack"							"OnWeaponPrimaryAttack_cindershot"
-	"OnProjectileCollision"                         "OnProjectileCollision_cindershot"
-	"OnWeaponStartZoomIn"							"OnWeaponStartZoomIn_cindershot"
-	"OnWeaponStartZoomOut"							"OnWeaponStartZoomOut_cindershot"
-	
-	// Projectile Ricochet
-    "projectile_ricochet_max_count"					"0"
-	"bolt_bounce_frac"								"0" //"0.49"
-    "projectile_bounce_damage_reduction_scale"		"0"
-    "projectile_speed_reduction_factor"	 			"0"
-	"projectile_damages_owner"						"0"
+    "damage_flags"									"DF_BULLET | DF_GIB | DF_DISMEMBERMENT"
 
-	//"projectile_gravity_scale" "1.5"
+	// Menu
+	"menu_category"                                 "ar"
+	"menu_anim_class"                               "medium"
+	"stat_damage" 									"75"
+	"stat_range"  									"65"
+	"stat_accuracy"   								"80"
+	"stat_rof"										"80"
+
+	// Models
+	"viewmodel"   									"mdl/weapons/beam_ar/ptpov_beam_ar.rmdl"
+	"playermodel" 									"mdl/weapons/beam_ar/w_beam_ar.rmdl"
+	"holster_type"									"rifle"
+
+	"chroma_color"									".4 .8 1"
+
+    "OnWeaponActivate"                              "OnWeaponActivate_Energy_AR"
+    "OnWeaponDeactivate"                            "OnWeaponDeactivate_Energy_AR"
+
 	
+
 	// Menu
 	"menu_category"                                 "shotgun"
 	"menu_anim_class"                               "large"
@@ -48,6 +55,7 @@ WeaponData
 	"playermodel" 									"mdl/weapons/w1128/w_w1128.rmdl"
 
 	// Effects
+
 	"tracer_effect"   								"weapon_tracers_shotgun"
 	"fx_muzzle_flash_view"							"mflash_shotgun_fp_FULL"
 	"fx_muzzle_flash_world"							"mflash_shotgun_FULL"
@@ -56,7 +64,7 @@ WeaponData
 	"chroma_color"									".5 .3 1"
 
 	"projectile_lifetime" 							"30.0"
-	"impact_effect_table" 							"exp_emp"
+	"impact_effect_table" 							"exp_nuke"
 	"vortex_absorb_effect"							"wpn_vortex_projectile_shotgun_FP"
 	"vortex_absorb_effect_third_person"				"wpn_vortex_projectile_shotgun"
 	"vortex_absorb_sound"							"Vortex_Shield_AbsorbBulletSmall"
@@ -76,15 +84,16 @@ WeaponData
 	"low_ammo_sound_name_3"							"Softball_LowAmmo_Shot3"
 
 	"projectilemodel" 								"mdl/weapons/bullets/mgl_grenade.rmdl"
-	"projectile_trail_effect_0" 					"P_plasma_proj_LG_DLight"
+	"projectile_trail_effect_0" 					"P_xo_nuke_warn_flare"
 	"projectile_launch_speed"						"2500"
 
 
-	"explosion_inner_radius"  						"50"
-	"explosionradius" 								"150"
+
+	"explosion_inner_radius"						"200"
+	"explosionradius"								"640"
 	"impulse_force"   								"7000"
-	"explosion_damage"								"45"
-	"explosion_damage_heavy_armor"					"90"
+	"explosion_damage"								"666"
+	"explosion_damage_heavy_armor"					"66"
 
 	dof_zoom_focusArea_horizontal					0.036
 	dof_zoom_focusArea_top							0.070
@@ -102,10 +111,10 @@ WeaponData
 	"ammo_clip_size"   								"6"
 
 	// Damage - When Used by Players
-	"damage_near_value"   							"50"
-	"damage_far_value"								"50"
-	"damage_near_value_titanarmor"					"50"
-	"damage_far_value_titanarmor" 					"50"
+	"damage_near_value"   							"90"
+	"damage_far_value"								"90"
+	"damage_near_value_titanarmor"					"90"
+	"damage_far_value_titanarmor" 					"90"
 	"damage_rodeo" 									"550"
 	"damage_near_distance"							"250"
 	"damage_far_distance" 							"850"
@@ -113,10 +122,10 @@ WeaponData
 	"damage_leg_scale"                              "1.0"
 
 	// Damage - When Used by NPCs
-	"npc_damage_near_value"   						"25"
-	"npc_damage_far_value"							"13"
-	"npc_damage_near_value_titanarmor"				"40"
-	"npc_damage_far_value_titanarmor" 				"0"
+	"npc_damage_near_value"   						"90"
+	"npc_damage_far_value"							"90"
+	"npc_damage_near_value_titanarmor"				"90"
+	"npc_damage_far_value_titanarmor" 				"90"
 
 	// Spread
 
@@ -203,8 +212,8 @@ WeaponData
 	"viewmodel_shake_right"							"0.0"
 
 	// Bodygroups:
-	//"bodygroup1_name"	"sight"
-	//"bodygroup1_set"	"1"
+	"bodygroup1_name"	"sight"
+	"bodygroup1_set"	"1"
 
     "clip_bodygroup"						"clip"
     "clip_bodygroup_index_shown"			"0"
@@ -233,20 +242,15 @@ WeaponData
 	   		"uses_ammo_pool"				"0"
 		}
 
-                         
-        bouncepls
-		{
-		"projectile_ricochet_max_count"					"1"
-		"bolt_bounce_frac" "1"
-		"projectile_bounce_damage_reduction_scale"		"0.5"
-		"projectile_speed_reduction_factor"	 			"0"
-		"projectile_damages_owner"						"0"
-		}
+                  hopup_turbocharger
+        {
+			"fire_rate"   									"18"
+			"ammo_clip_size"   								"42"  
+			"is_semi_auto"									"0"
+	}      
+                               
          
-        dontdoeffectonimpact
-		{
-		"impact_effect_table" 							"exp_energy_ar_charged"
-		}			
+                                                            
          
 
 		legendary1
@@ -297,11 +301,10 @@ WeaponData
 	}
 
 
-	// UI - Crosshair
-	"rui_crosshair_index"                      "0"
-	"active_crosshair_count"                   "1"
+	active_crosshair_count				"1"
+	rui_crosshair_index					"0"
 
-	RUI_CrosshairData
+RUI_CrosshairData
 	{
 		DefaultArgs
 		{
@@ -311,14 +314,14 @@ WeaponData
 			isReloading					weapon_is_reloading
 			teamColor					crosshair_team_color
 			isAmped						weapon_is_amped
-			crosshairMovementX          crosshair_movement_x
-			crosshairMovementY          crosshair_movement_y
+		    crosshairMovementX          crosshair_movement_x
+		    crosshairMovementY          crosshair_movement_y
 		}
 
 		Crosshair_1
 		{
-			"ui"						"ui/crosshair_circle2"
-			"base_spread"				"0.0"
+			"ui"						"ui/crosshair_grenade_launcher2"
+			"base_spread"				"1.0"
 			Args
 			{
 				isFiring				weapon_is_firing

@@ -119,6 +119,8 @@ void function InitWeaponScripts()
 	//Custom
 	MpWeaponEmoteProjector_Init()
 	MpWeaponGuidedMissile_Init()
+	MpWeaponFanatic_Init()
+	MpWeaponFlameThrower_Init()
 
 	SmartAmmo_Init()
 
@@ -139,7 +141,6 @@ void function InitWeaponScripts()
 	MpWeaponDefender_Init()
 	MpWeaponDmr_Init()
 	MpWeaponSmartPistol_Init()
-	//MpWeaponGuidedMissile_Init()
 	SonarGrenade_Init()
 	MpWeaponSniper_Init()
 	MpWeaponLSTAR_Init()
@@ -156,12 +157,9 @@ void function InitWeaponScripts()
 	MpWeaponLifelineBatonPrimary_Init()
 	MpWeaponDeployableCover_Init()
 	MeleeShadowsquadHands_Init()
+	MpWeaponShadowsquadHandsPrimary_Init()
+	MDLSpawner_Init()
 	
-	#if DEVELOPER
-		MpWeaponShadowsquadHandsPrimary_Init()
-		MDLSpawner_Init()
-	#endif
-
 	MpAbilityGibraltarShield_Init()
 	MpWeaponBubbleBunker_Init()
 

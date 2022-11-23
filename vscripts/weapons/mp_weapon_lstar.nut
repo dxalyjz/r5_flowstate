@@ -4,6 +4,7 @@ global function MpWeaponLSTAR_Init
 global function OnWeaponPrimaryAttack_weapon_lstar
 global function OnWeaponCooldown_weapon_lstar
 global function OnWeaponActivate_weapon_lstar
+global function OnProjectileCollision_lkeeper
 
 #if SERVER
 global function OnWeaponNpcPrimaryAttack_weapon_lstar
@@ -152,4 +153,11 @@ void function OnWeaponActivate_weapon_lstar( entity weapon )
 #if SERVER
 	CheckForRCEE( weapon, owner )
 #endif // #if SERVER
+}
+
+void function OnProjectileCollision_lkeeper( entity projectile, vector pos, vector normal, entity hitEnt, int hitbox, bool isCritical )
+{
+	#if SERVER
+	if(IsValid(projectile)) projectile.SetAbsAngles(<RandomFloatRange(-90,90),RandomFloatRange(-90,90),RandomFloatRange(-90,90)>)
+	#endif
 }
