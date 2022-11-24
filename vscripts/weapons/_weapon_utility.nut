@@ -61,7 +61,6 @@ global function OnWeaponRegenEndGeneric
 global function Ultimate_OnWeaponRegenBegin
 global function OnWeaponActivate_RUIColorSchemeOverrides
 global function PlayDelayedShellEject
-global function OnWeaponReload_g2
 
 #if SERVER
 global function CreateDamageInflictorHelper
@@ -1385,7 +1384,7 @@ bool function PlantSuperStickyGrenade( entity ent, vector pos, vector normal, en
 	#if SERVER
 		ent.SetAbsOrigin( plantPosition )
 		ent.SetAbsAngles( plantAngles )
-		// ent.NotSolid() // Without this, shooting the same spot with the softball would cause later shots to fail to stick
+		ent.NotSolid() // Without this, shooting the same spot with the softball would cause later shots to fail to stick
 		ent.proj.isPlanted = true
 	#else
 		ent.SetOrigin( plantPosition )
@@ -2602,7 +2601,7 @@ void function PROTO_InitTrackedProjectile( entity projectile )
 	int maxDeployed = projectile.GetProjectileWeaponSettingInt( eWeaponVar.projectile_max_deployed )
 	if ( maxDeployed != 0 )
 	{
-		AddToTrackedEnts( owner, projectile )
+		AddToScriptManagedEntArray( owner.s.activeTrapArrayId, projectile )
 
 		array<entity> traps = GetScriptManagedEntArray( owner.s.activeTrapArrayId )
 		array<entity> sameTypeTrapEnts
@@ -4949,31 +4948,3 @@ void function PlayDelayedShellEject( entity weapon, float time, int count = 1, b
 		weapon.PlayWeaponEffect( vmShell, worldShell, shellAttach, persistent )
 	}
 }
-
-
-void function OnWeaponReload_g2( entity weapon, int milestoneIndex )
-{
-	#if SERVER
-	entity owner = weapon.GetWeaponOwner()
-	if(GetCurrentPlaylistVarBool( "enable_m1_garand_reload", false ))
-		thread DoRareAnim(owner)
-	#endif
-}
-
-#if SERVER
-void function DoRareAnim(entity player)
-{
-	WaitFrame() //required
-	
-	if(!IsValid(player)) return
-	
-	entity weapon = player.GetActiveWeapon( eActiveInventorySlot.mainHand )
-	
-	if(weapon.GetWeaponClassName() != "mp_weapon_g2") return
-	
-	entity viewmodel = weapon.GetWeaponViewmodel()
-	try{ //required
-	viewmodel.Anim_NonScriptedPlay("animseq/weapons/g2/ptpov_g2a4/reload_empty_rare.rseq")
-	}catch(e420){} //required
-}
-#endif

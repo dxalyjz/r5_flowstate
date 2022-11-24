@@ -163,6 +163,7 @@ Scripts:
 	_networkvars.gnut
 	_vscript.gnut
 	_init.gnut
+	_mapeditor.gnut
 	class/CPlayer.nut
 	sh_anim_windows.gnut
 	sh_anim_events.gnut
@@ -229,9 +230,7 @@ Scripts:
 	sh_timer.gnut
 	sh_doors.nut
 	sh_capturemode.gnut
-	
 	sh_weaponrack.nut
-
 	sh_clientsidepickups.gnut
 	titan/sh_titan.gnut
 	titan/sh_titan_embark.gnut
@@ -249,8 +248,6 @@ Scripts:
 	weapons/mp_ability_holopilot.nut
 	weapons/mp_weapon_smart_pistol.nut
 	weapons/mp_weapon_mdlspawner.nut
-	
-
 	weapons/mp_ability_heal.nut
 	weapons/mp_ability_sonar.nut
 	weapons/mp_weapon_basic_bolt.nut
@@ -268,31 +265,24 @@ Scripts:
 	weapons/mp_weapon_rspn101.nut
 	weapons/mp_weapon_vinson.nut
 	weapons/mp_weapon_mastiff.nut
-	weapons/mp_weapon_melee_primary.nut
-	
+	weapons/mp_weapon_melee_primary.nut	
 	weapons/mp_weapon_wraith_kunai_primary.nut
-	weapons/melee_wraith_kunai.nut
+	weapons/melee_wraith_kunai.nut	
 	
 	weapons/mp_weapon_bloodhound_axe_primary.nut
-	weapons/melee_bloodhound_axe.nut
-	
+	weapons/melee_bloodhound_axe.nut	
 	weapons/mp_weapon_lifeline_baton_primary.nut
-	weapons/melee_lifeline_baton.nut
-	
+	weapons/melee_lifeline_baton.nut	
 	weapons/mp_weapon_bolo_sword_primary.nut
 	weapons/melee_bolo_sword.nut
-
 	weapons/mp_weapon_shadow_squad_hands_primary.nut
 	weapons/melee_shadowsquad_hands.nut
 	
-	
 	weapons/mp_weapon_shotgun.nut
 	weapons/mp_weapon_sniper.nut
-	weapons/mp_weapon_sentinel.nut
 	weapons/mp_weapon_thermite_grenade.nut
 	weapons/mp_weapon_zipline.nut
 	weapons/mp_weapon_alternator_smg.nut
-
 	weapons/sh_deployable.gnut
 	weapons/sh_deployable_wall.gnut
 	weapons/sh_phase_shift.gnut
@@ -301,12 +291,8 @@ Scripts:
 	weapons/sh_stim.gnut
 	weapons/mp_weapon_energy_shotgun.nut
 	weapons/mp_weapon_grenade_sonar.nut
-	weapons/mp_weapon_clickweapon.nut
-	weapons/mp_weapon_editor.nut
-	weapons/mp_ability_translocation.nut
-	weapons/mp_weapon_energysword.nut
 ]
-
+	
 When: "SERVER || CLIENT"
 Scripts:
 [
@@ -847,6 +833,13 @@ Scripts:
 When: "SERVER || CLIENT"
 Scripts:
 [
+	sh_clientmusic.gnut
+	sh_waypoints.gnut
+	sh_resource_system_global.gnut
+	mp/sh_gas.gnut
+	mp/sh_shellshock.gnut
+	weapons/sh_care_package.nut
+	mp/sh_weapon_inspect.gnut
 	weapons/mp_weapon_grenade_gravity.nut
 	weapons/mp_ability_phase_rewind.nut
 	weapons/mp_ability_space_elevator_tac.nut
@@ -882,17 +875,16 @@ Scripts:
 	weapons/mp_titanweapon_flightcore_rockets.nut
 	weapons/mp_weapon_heatwave.nut
 	weapons/mp_weapon_plasmapistol.nut
+	weapons/mp_weapon_sentinel.nut
+	weapons/mp_weapon_clickweapon.nut
+	weapons/mp_weapon_editor.nut
+	weapons/mp_ability_translocation.nut
+	weapons/mp_weapon_energysword.nut
+	weapons/mp_weapon_satchel.nut
+	weapons/mp_weapon_mobile_hmg.nut
+	weapons/mp_weapon_throwingknife.nut
+	weapons/mp_weapon_softball.nut
 
-	sh_clientmusic.gnut
-
-	sh_waypoints.gnut
-	sh_resource_system_global.gnut
-
-	mp/sh_gas.gnut
-	mp/sh_shellshock.gnut
-	weapons/sh_care_package.nut
-
-	mp/sh_weapon_inspect.gnut
 ]
 
 When: "SERVER || CLIENT"

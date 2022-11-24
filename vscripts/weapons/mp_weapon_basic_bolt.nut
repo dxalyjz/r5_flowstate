@@ -42,7 +42,8 @@ void function OnClientAnimEvent_weapon_basic_bolt( entity weapon, string name )
 
 var function OnWeaponPrimaryAttack_weapon_yeet( entity weapon, WeaponPrimaryAttackParams attackParams )
 {
-	gp()[0].KnockBack(gp()[0].GetViewVector()*-1000 ,0.1)
+	entity player = weapon.GetWeaponOwner()
+	player.KnockBack(player.GetViewVector()*-1000 ,0.1)
 
 	weapon.EmitWeaponNpcSound( LOUD_WEAPON_AI_SOUND_RADIUS_MP, 0.2 )
 

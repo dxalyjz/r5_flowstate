@@ -6,8 +6,8 @@ WeaponData
 	"description" 									"Throwing Knife"
 	"longdesc" 										"Throwing Knife"
 
-	"menu_icon"										"rui/customemotes/amogusred"
-	"hud_icon"										"rui/customemotes/amogusred"
+	"menu_icon"										"rui/weapon_icons/r5/weapon_throwingknife"
+	"hud_icon"										"rui/weapon_icons/r5/weapon_throwingknife"
 
 	"weapon_type_flags"								"WPT_PRIMARY"
 	"is_toss_weapon"								"1"
@@ -35,31 +35,32 @@ WeaponData
 	"OnWeaponTossPrep"								"Grenade_OnWeaponTossPrep"
 	"OnWeaponTossCancel"							"Grenade_OnWeaponTossCancelDrop"
 	"OnWeaponDeactivate"							"Grenade_OnWeaponDeactivate"
-	//"OnWeaponActivate"							    "OnWeaponActivate_weapon_throwingknife"
-	//"OnProjectileCollision"							"OnProjectileCollision_weapon_throwingknife"
+	//"OnWeaponActivate"							"OnWeaponActivate_weapon_throwingknife"
+	"OnProjectileCollision"							"OnProjectileCollision_weapon_throwingknife"
 
 	// Menu Stats
 
 	// Models
-	"viewmodel"										"mdl/Weapons/ptpov_throwingknife/ptpov_throwingknife.rmdl"
-	"playermodel"									"mdl/weapons/combat_knife/w_combat_knife.rmdl"
-	"projectilemodel"								"mdl/weapons/shuriken/w_shuriken.rmdl"
+	"viewmodel"									"mdl/weapons/throwingknife/ptpov_throwing_knife.rmdl"
+	"playermodel"									"mdl/weapons/throwingknife/w_throwing_knife.rmdl"
+	"projectilemodel"								"mdl/weapons/throwingknife/w_throwing_knife.rmdl"
 	"projectile_lifetime" 							"15"
-
-	"offhand_default_inventory_slot"				"0"
+	//"grenade_mover_destroy_when_planted"            "1"
 
 	"zoom_effects"									"0"
 	"ads_move_speed_scale"							"1"
 
 	// Effects
-	"bounce_effect_table"							"bounce_arc"
-	"impact_effect_table" 							"exp_emp"
-	"projectile_trail_effect_0" 					"wpn_grenade_frag_blue"
+	"bounce_effect_table"							"pulse_blade"
+	"impact_effect_table" 							"pulse_blade"
+
+    "projectile_trail_effect_0" 					"P_tracer_proj_sniper_piercer"
+
 	"vortex_impact_effect"							"P_impact_exp_emp_med_default"
-	"vortex_absorb_effect"							"wpn_vortex_projectile_frag_FP"
-	"vortex_absorb_effect_third_person"				"wpn_vortex_projectile_frag"
-	"vortex_absorb_sound"							"Vortex_Shield_AbsorbBulletLarge"
-	"vortex_absorb_sound_1p_vs_3p"					"Vortex_Shield_AbsorbBulletLarge_1P_VS_3P"
+	"vortex_absorb_effect"							"wpn_vortex_projectile_rifle_FP"
+	"vortex_absorb_effect_third_person"				"wpn_vortex_projectile_rifle"
+	"vortex_absorb_sound"							"Vortex_Shield_AbsorbBulletSmall"
+	"vortex_absorb_sound_1P_VS_3P"					"Vortex_Shield_AbsorbBulletSmall_1P_VS_3P"
 	"projectile_adjust_to_gun_barrel"				"0"
 	"projectile_adjust_to_hand"						"1"
 
@@ -74,13 +75,17 @@ WeaponData
     "damage_headshot_scale"							"3"
 
 	// Sounds
-	"sound_throw_1p"								"Weapon_Arcstar_Throw_1P"
-	"sound_deploy_1p"								"weapon_arcstar_armback_1P"
-	"sound_throw_3p"								"Weapon_Arcstar_Throw_3P"
-	"sound_deploy_3p"								"weapon_arcstar_armback_3P"
+	"sound_throw_1p"									"weapon_gravitystar_throw_1p"
+	"sound_deploy_1p"									"weapon_firestar_draw_1p"
+	"sound_throw_3p"									"weapon_gravitystar_throw_3p"
+	"sound_deploy_3p"									"weapon_firestar_draw_3p"
 	"sound_dryfire"									"Survival_UI_Ability_NotReady"
-	"sound_cook_warning"							"weapon_arcstar_explosivewarningbeep"
-	//"battle_chatter_event"							"bc_arcStar"
+	//"sound_cook_warning"							"weapon_arcstar_explosivewarningbeep"
+	//"sound_grenade_projectile" 						"Pilot_PulseBlade_Throw_1P"
+
+
+    "projectile_ricochet_max_count"    "999"
+	"bolt_bounce_frac"                 "0.1"
 
 	// Damage - When Used by Players
 	"damage_type" 									"burn"
@@ -301,7 +306,23 @@ WeaponData
     "ammo_stockpile_max"                            "420"
 
 	Mods
-	{	
+	{
+		survival_finite_ammo
+		{
+		}
+
+		infinite_ammo_clips
+		{
+		}
+
+		seer_passive_throwingknife
+		{
+		    "zoom_effects"									"1"
+            "zoom_fov"									    "60"
+            "zoom_time_in"									"0.1"
+            "zoom_time_out"   								"0.1"
+		}
+
 		sp_disable_arc_indicator
 		{
 			grenade_arc_indicator_bounce_count				"0"

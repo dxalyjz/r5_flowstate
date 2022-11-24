@@ -101,7 +101,10 @@ void function SetupHeirloom( bool isDataKnife = false, bool isCombatKnife = fals
 		player.GiveWeapon( "mp_weapon_bolo_sword_primary", WEAPON_INVENTORY_SLOT_PRIMARY_2 )
 		player.GiveOffhandWeapon( "melee_bolo_sword", OFFHAND_MELEE )		
 	}
-	
+
+	player.GiveWeapon( "mp_weapon_melee_boxing_ring", WEAPON_INVENTORY_SLOT_PRIMARY_2 )
+	player.GiveOffhandWeapon( "melee_boxing_ring", OFFHAND_MELEE )
+	EmitSoundOnEntity( player, "LootCeremony_LootHologram_Appear_Heirloom" )
 }
 
 void function UnEquipMelee( bool allplayers = false)

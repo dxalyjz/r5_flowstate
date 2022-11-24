@@ -121,6 +121,7 @@ void function InitWeaponScripts()
 	MpWeaponGuidedMissile_Init()
 	MpWeaponFanatic_Init()
 	MpWeaponFlameThrower_Init()
+	MpWeaponEnergySword_Init()
 
 	SmartAmmo_Init()
 
