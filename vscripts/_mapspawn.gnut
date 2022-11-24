@@ -318,7 +318,8 @@ void function CodeCallback_MapSpawn() // original script entry point
 	PrecacheWeapon( $"mp_weapon_dragon_lmg" )
 	PrecacheWeapon( $"mp_weapon_3030" )
 	PrecacheWeapon( $"mp_weapon_sentinel" )
-
+	PrecacheWeapon( $"mp_weapon_mobile_hmg")
+	
 	//////////////////////////////////////////////
 	//CUSTOM PORTED/SCRIPTED BY CAFEDECOLOMBIAFPS
 	//////////////////////////////////////////////

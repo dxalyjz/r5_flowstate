@@ -104,7 +104,7 @@ void function SetupWeapons()
 	SetupDevCommand( "Dev: 30-30 Repeater", "give mp_weapon_3030" )
 	SetupDevCommand( "Dev: Wingman Elite", "give mp_weapon_wingman_n" )
 	SetupDevCommand( "Dev: Throwing Knife", "give mp_weapon_throwingknife" )
-	SetupDevCommand( "Dev: Sheila", "give mp_weapon_sheila" )
+	SetupDevCommand( "Dev: Sheila", "give mp_weapon_mobile_hmg" )
 	SetupDevCommand( "Dev: Softball", "give mp_weapon_softball" )
 	SetupDevCommand( "Dev: Energy Sword", "give mp_weapon_energysword" )
 	#endif

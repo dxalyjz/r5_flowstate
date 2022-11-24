@@ -290,18 +290,22 @@ void function SetupDefaultDevCommandsMP()
 
 	if(GetCheatsState()){
 		
+		if ( IsSurvivalMenuEnabled() )
+			SetupDevMenu( "Change Character", SetDevMenu_SurvivalCharacter )
+		
 		SetupDevMenu( "Abilities", SetDevMenu_Abilities )
-		SetupDevMenu( "Equip Weapon", SetDevMenu_Weapons )
+		SetupDevMenu( "Weapons", SetDevMenu_Weapons )
 		//SetupDevMenu( "MDLSpawner", SetDevMenu_ModelSpawner )
 		
 		if ( IsSurvivalMenuEnabled() )
 		{
-			SetupDevMenu( "Change Character", SetDevMenu_SurvivalCharacter )
 			//SetupDevMenu( "Override Spawn Character", SetDevMenu_OverrideSpawnSurvivalCharacter )
-			SetupDevMenu( "Survival", SetDevMenu_Survival )
+			SetupDevMenu( "Custom: Heirlooms", SetDevMenu_CustomHeirlooms )
+			
 			SetupDevMenu( "Custom: Weapons", SetDevMenu_SurvivalLoot, "weapon_custom" )
-			SetupDevMenu( "Custom: Heirlooms", SetDevMenu_SurvivalLoot, "heirloom_custom" )
-			SetupDevMenu( "Custom: Attachments", SetDevMenu_SurvivalLoot, "attachment_custom" )			
+			
+			SetupDevMenu( "Custom: Attachments", SetDevMenu_SurvivalLoot, "attachment_custom" )	
+			SetupDevMenu( "Survival", SetDevMenu_Survival )			
 			SetupDevMenu( "Survival: Weapons", SetDevMenu_SurvivalLoot, "main_weapon" )
 			SetupDevMenu( "Survival: Attachments", SetDevMenu_SurvivalLoot, "attachment" )
 			SetupDevMenu( "Survival: Helmets", SetDevMenu_SurvivalLoot, "helmet" )
@@ -372,14 +376,6 @@ void function SetupDefaultDevCommandsMP()
 		SetupDevCommand( "Toggle Skybox View", "script thread ToggleSkyboxView()" )
 		SetupDevCommand( "Toggle HUD", "ToggleHUD" )
 
-		// SetupDevCommand( "Melee: Bolo Sword", "script thread SetupHeirloom()" )
-		// SetupDevCommand( "Melee: Data Knife", "script thread SetupHeirloom(true)" )
-		// SetupDevCommand( "Melee: Combat Knife", "script thread SetupHeirloom(false, true)" )
-		// SetupDevCommand( "Melee: Nessy", "script thread SetupHeirloom(false, false, true)" )
-		// SetupDevCommand( "Melee: Loba's Wolf", "script thread SetupHeirloom(false, false, false, true)" )
-		// SetupDevCommand( "Melee: Equip Shadow Hands", "script thread SetupShadowHands()" )
-		// SetupDevCommand( "Melee: Unequip", "script thread UnEquipMelee()" )		
-		
 		//SetupDevCommand( "Toggle Offhand Low Recharge", "ToggleOffhandLowRecharge" )
 		//SetupDevCommand( "Map Metrics Toggle", "script_client GetLocalClientPlayer().ClientCommand( \"toggle map_metrics 0 1 2 3\" )" )
 		//SetupDevCommand( "Toggle Pain Death sound debug", "script TogglePainDeathDebug()" )
@@ -448,6 +444,10 @@ void function SetDevMenu_TDMPrimaryWeapons( var _ )
 void function SetDevMenu_TDMSecondaryWeapons( var _ )
 {
 	thread ChangeToThisMenu( SetupTDMSecondaryWeapsons )
+}
+void function SetDevMenu_CustomHeirlooms( var _ )
+{
+	thread ChangeToThisMenu( SetupCustomHeirlooms )
 }
 void function SetDevMenu_SurvivalCharacter( var _ )
 {
@@ -724,6 +724,17 @@ void function SetDevMenu_RespawnPlayers( var _ )
 	ChangeToThisMenu( SetupRespawnPlayersDevMenu )
 }
 
+void function SetupCustomHeirlooms()
+{
+	SetupDevCommand("Melee: Bolo Sword", "script thread SetupHeirloom(4)" )
+	SetupDevCommand("Melee: Data Knife", "script thread SetupHeirloom(0)" )
+	SetupDevCommand("Melee: Combat Knife", "script thread SetupHeirloom(1)" )
+	SetupDevCommand("Melee: Nessy", "script thread SetupHeirloom(2)" )
+	SetupDevCommand("Melee: Loba's Wolf", "script thread SetupHeirloom(3)" )
+	SetupDevCommand("Melee: Boxing Ring Gloves", "script thread SetupHeirloom(5)" )	
+	SetupDevCommand("Melee: Equip Shadow Hands", "script thread SetupHeirloom(6)" )
+	SetupDevCommand("Melee: Unequip", "script thread UnEquipMelee()" )
+}
 
 void function SetupRespawnPlayersDevMenu()
 {
