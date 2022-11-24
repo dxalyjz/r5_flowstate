@@ -332,7 +332,6 @@ void function CodeCallback_MapSpawn() // original script entry point
 	PrecacheWeapon($"mp_ability_cloak" )
 	PrecacheWeapon($"mp_ability_birds")
 	PrecacheWeapon($"mp_weapon_energysword" )
-	PrecacheWeapon($"melee_energy_sword" )	
 	PrecacheWeapon($"mp_weapon_decoy_grenade")
 	PrecacheWeapon($"mp_weapon_dropship_launcher")
 	PrecacheWeapon($"mp_weapon_ea_cannon")

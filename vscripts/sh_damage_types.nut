@@ -101,7 +101,6 @@ global enum eDamageSourceId
 	mp_weapon_3030
 	mp_weapon_dragon_lmg
 	mp_weapon_energysword
-	melee_energy_sword
 	mp_ability_birds
 	mp_weapon_throwingknife
 	
@@ -607,7 +606,6 @@ void function DamageTypes_Init()
 		[ eDamageSourceId.mp_ability_birds ] 						= "Arthur's Revenge",
 		[ eDamageSourceId.mp_weapon_3030 ] 							= "30-30 Repeater",
 		[ eDamageSourceId.mp_weapon_energysword ] 					= "Energy Sword",
-		[ eDamageSourceId.melee_energy_sword ] 						= "Energy Sword",
 		[ eDamageSourceId.mp_weapon_dragon_lmg ] 					= "Rampage LMG"		
 	}
 

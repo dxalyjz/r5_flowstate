@@ -31,7 +31,7 @@ WeaponData
 		
 		energysword
 		{
-
+			"viewmodel"   									"mdl/Weapons/energy_sword/ptpov_energy_sword_new.rmdl"
 			"melee_angle"									"30"
 			"melee_attack_animtime"							"0"
 			"melee_damage"									"0"

@@ -47,9 +47,9 @@ void function OnWeaponActivate_EnergySword( entity weapon )
 	
 	entity player = weapon.GetWeaponOwner()
 	
-	file.oldMelee = player.GetOffhandWeapon( OFFHAND_MELEE ).GetWeaponClassName()
-	player.TakeOffhandWeapon(OFFHAND_MELEE)
-	player.GiveOffhandWeapon( "melee_energy_sword", OFFHAND_MELEE )
+	//file.oldMelee = player.GetOffhandWeapon( OFFHAND_MELEE ).GetWeaponClassName()
+	//player.TakeOffhandWeapon(OFFHAND_MELEE)
+	//player.GiveOffhandWeapon( "melee_energy_sword", OFFHAND_MELEE )
 	
 	//thread DisableEnergySwordMeleeAfterAttack(player)
 #endif

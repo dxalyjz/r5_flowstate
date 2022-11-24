@@ -423,7 +423,7 @@ void function CodeCallback_OnMeleePressed( entity attacker, entity meleeInputWea
 		{
 			meleeAttackWeapon.AddMod( "energysword" )	
 		}
-	else if ( meleeAttackWeapon.HasMod( "energysword" ) )
+	else if ( attacker.GetActiveWeapon( eActiveInventorySlot.mainHand ).GetWeaponClassName() != "mp_weapon_energysword" )
 		{
 			meleeAttackWeapon.RemoveMod( "energysword" )
 		}
@@ -500,15 +500,15 @@ void function CodeCallback_OnMeleeStartActivity( entity attacker, entity meleeAt
 			}
 			else
 			{
-				attacker.Lunge_SetTargetPosition( <lungeTarget.GetOrigin().x, lungeTarget.GetOrigin().y, lungeTarget.GetWorldSpaceCenter().z - 52 > +  AnglesToForward(attacker.GetAngles())*-50)
+				attacker.Lunge_SetTargetPosition( <lungeTarget.GetOrigin().x, lungeTarget.GetOrigin().y, lungeTarget.GetWorldSpaceCenter().z - 52 > +  AnglesToForward(attacker.GetAngles())*100)
 				attacker.Lunge_SetSmoothTime( 0 )
 				attacker.Lunge_EnableFlying()
-				attacker.Lunge_SetMaxEndSpeed(100)
-				if(attacker.IsOnGround())
-					attacker.Lunge_LockPitch( true )
+				// attacker.Lunge_SetMaxEndSpeed(100)
+				// if(attacker.IsOnGround())
+					// attacker.Lunge_LockPitch( true )
 
 				#if SERVER
-				DoDamage_EnergySword(attacker, meleeAttackWeapon, lungeTarget)
+				thread DoDamage_EnergySword(attacker, meleeAttackWeapon, lungeTarget)
 				#endif
 			}
 		}
@@ -519,23 +519,28 @@ void function CodeCallback_OnMeleeStartActivity( entity attacker, entity meleeAt
 #if SERVER
 void function DoDamage_EnergySword(entity attacker, entity meleeAttackWeapon, entity lungeTarget)
 {
+	WaitFrame()
+	if(!IsValid(lungeTarget) || IsValid(lungeTarget) && !IsAlive(lungeTarget)) return
+	
 	string weaponName = meleeAttackWeapon.GetWeaponClassName()
 
-	int damageAmount     = meleeAttackWeapon.GetDamageAmountForArmorType( lungeTarget.GetArmorType() )
-	int damageScriptType = meleeAttackWeapon.GetWeaponDamageFlags()
-	int damageType       = DMG_MELEE_ATTACK
+	// int damageAmount     = meleeAttackWeapon.GetDamageAmountForArmorType( lungeTarget.GetArmorType() )
+	// int damageScriptType = meleeAttackWeapon.GetWeaponDamageFlags()
+	// int damageType       = DMG_MELEE_ATTACK
 	int damageSourceId   = (weaponName in eDamageSourceId ? eDamageSourceId[weaponName] : eDamageSourceId.damagedef_unknownBugIt)
-	vector damageOrigin  = lungeTarget.GetOrigin()
-	vector damageForce   = AnglesToForward( attacker.EyeAngles() ) * meleeAttackWeapon.GetWeaponDamageForce()
+	// vector damageOrigin  = lungeTarget.GetOrigin()
+	// vector damageForce   = AnglesToForward( attacker.EyeAngles() ) * meleeAttackWeapon.GetWeaponDamageForce()
 
-	table damageTable = {
-		scriptType = meleeAttackWeapon.GetWeaponDamageFlags(),
-		damageType = damageType,
-		damageSourceId = damageSourceId,
-		origin = damageOrigin,
-		force = Vector(0,0,0)
-	}
-	lungeTarget.TakeDamage( 420, attacker, attacker, damageTable )	
+	// table damageTable = {
+		// scriptType = meleeAttackWeapon.GetWeaponDamageFlags(),
+		// damageType = damageType,
+		// damageSourceId = damageSourceId,
+		// origin = damageOrigin,
+		// force = Vector(0,0,0)
+	// }
+	//lungeTarget.TakeDamage( 420, attacker, attacker, damageTable )
+	lungeTarget.TakeDamage( 420, attacker, attacker, { damageSourceId = damageSourceId })
+	//lungeTarget.Die( attacker, attacker, { damageSourceId = damageSourceId } )
 }
 #endif
 
@@ -563,7 +568,7 @@ void function CodeCallback_OnMeleeAttackAnimEvent( entity attacker, entity melee
 	if ( !attacker.PlayerMelee_IsAttackActive() )
 		return // (dw): see R5DEV-53886
 	
-	if ( meleeAttackWeapon.GetWeaponClassName() == "melee_energy_sword" ) 
+	if ( attacker.GetActiveWeapon( eActiveInventorySlot.mainHand ).GetWeaponClassName() == "mp_weapon_energysword" ) 
 		return
 	
 	Assert( attacker.PlayerMelee_GetState() == PLAYER_MELEE_STATE_HUMAN_KICK_ATTACK )
