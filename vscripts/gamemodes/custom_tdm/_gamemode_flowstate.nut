@@ -94,16 +94,6 @@ struct {
 	array<string> battlelog
 	string authkey = "123"
 } file
-struct PlayerInfo
-{
-	string name
-	int team
-	int score
-	int deaths
-	float kd
-	int damage
-	int lastLatency
-}
 
 struct
 {
@@ -3102,13 +3092,6 @@ array<PlayerInfo> playersInfo = []
             }
         }
 		return msg
-}
-
-int function ComparePlayerInfo(PlayerInfo a, PlayerInfo b)
-{
-	if(a.score < b.score) return 1;
-	else if(a.score > b.score) return -1;
-	return 0;
 }
 
 void function ResetAllPlayerStats()

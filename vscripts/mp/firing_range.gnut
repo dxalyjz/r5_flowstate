@@ -193,8 +193,6 @@ bool function ClientCommand_ToggleFriendlyFire( entity player, array<string> arg
 	return true
 }
 
-
-#if SERVER
 void function SpawnDummy(vector origin, vector angles)
 
 {
