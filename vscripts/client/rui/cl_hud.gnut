@@ -212,7 +212,7 @@ void function DEV_DamageFlyout( entity victim )
 
 
 const GIBRALTAR_PASSIVE_ICON = $"rui/hud/character_abilities/gibraltar_passive_transparent"
-void function DamageFlyout( float damageAmount, vector damagePosition, entity victim, int hitType, int damageFlags = 0, int damageType = 0, entity weapon = null )
+void function DamageFlyout( float damageAmount, vector damagePosition, entity victim, int hitType, int damageFlags = 0, int damageType = 0, entity weapon = null, bool forceBlueNumber = false )
 {
 	if ( !file.damageFlyoutEnabled )
 		return
@@ -310,7 +310,13 @@ void function DamageFlyout( float damageAmount, vector damagePosition, entity vi
 		shieldIcon = GIBRALTAR_PASSIVE_ICON
 		shieldLevel = 1
 	}
-
+	
+	if(forceBlueNumber)
+	{
+		shieldLevel = 2
+		shieldIcon = $""
+	}
+	
 	if ( showHitIndicator )
 	{
 		if ( file.rui_hitIndicator == null )
@@ -399,7 +405,7 @@ void function DamageFlyout( float damageAmount, vector damagePosition, entity vi
 		// are combined, meaning the RUI will never know that the player had a shield in the first place
 		if ( isShieldBreak )
 		{
-			printt( "wasShieldBreak" )
+			//printt( "wasShieldBreak" )
 			RuiSetGameTime( stackingRui, "shieldBreakTime", Time() )
 			RuiSetInt( stackingRui, "shieldBreakTier", shieldLevel )
 		}
