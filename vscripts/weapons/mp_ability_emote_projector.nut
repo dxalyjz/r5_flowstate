@@ -1,5 +1,6 @@
-global function MpWeaponEmoteProjector_Init
+//Made by @CaféFPS
 
+global function MpWeaponEmoteProjector_Init
 global function OnWeaponTossReleaseAnimEvent_WeaponEmoteProjector
 global function OnWeaponAttemptOffhandSwitch_WeaponEmoteProjector
 global function OnWeaponTossPrep_WeaponEmoteProjector
