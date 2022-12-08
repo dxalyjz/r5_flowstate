@@ -408,20 +408,25 @@ void function soloModePlayerToRestingList(entity player)
 void function soloModefixDelayStart(entity player)
 {
 	Message(player,"Loading solo mode")
-	HolsterAndDisableWeapons(player)
-
-	wait 8
+	
 	if(!isPlayerInRestingList(player))
 	{
+		HolsterAndDisableWeapons(player)
+		wait 8
 		soloModePlayerToWaitingList(player)
+		try
+		{
+			player.Die( null, null, { damageSourceId = eDamageSourceId.damagedef_suicide } )
+		}
+		catch (error)
+		{}
+	}
+	else
+	{
+		maki_tp_player(player,getWaitingRoomLocation(GetMapName()))
 	}
 
-	try
-	{
-		player.Die( null, null, { damageSourceId = eDamageSourceId.damagedef_suicide } )
-	}
-	catch (error)
-	{}
+	
 }
 
 void function setRealms_1v1(entity ent,int realmIndex)
@@ -735,6 +740,16 @@ void function _soloModeInit(string mapName)
 
 		NewLocPair( <-836.684998, 2751.19849, 192.03125>, <0, -150.722626, 0>),//12
 		NewLocPair( <-1405.85583, 2548.43164, 192.03125>, <0, 12.0755987, 0>),
+
+		NewLocPair( <-370.51,3663.66,38.05>, <0, -179, 0>),//13
+		NewLocPair( <-993.01,3593.72,38.03>, <0, 0, 0>),
+
+		NewLocPair( <325.75,5450.20,37.99>, <0, 0, 0>),//14
+		NewLocPair( <791.90,5470,37.96>, <0, -179, 0>),
+
+		NewLocPair( <-1300.11,825.80,263.59>, <0, -90, 0>),//15
+		NewLocPair( <-1282.95,365.33,258.52>, <0, -99, 0>),
+
 		]
 
 		//panel
@@ -751,6 +766,9 @@ void function _soloModeInit(string mapName)
 			NewLocPair( <1268.07, 1527.68, 190>, <0, 0, 0>),//10
 			NewLocPair( <-2969.78, 810.96, 140>, <0, 120, 0>),//11
 			NewLocPair( <-1073.46, 2685.75, 190>, <0, -43, 0>),//12
+			NewLocPair( <-716.40,3495.84,-30>, <0, -15, 0>),//13
+			NewLocPair( <591.95,5142.56,-30>, <0, 179, 0>),//14
+			NewLocPair( <-1530.68,500.86,190.03>, <0, -105, 0>),//15
 		]
 		}
 		else if (mapName == "mp_rr_aqueduct")
@@ -771,9 +789,6 @@ void function _soloModeInit(string mapName)
 
 			NewLocPair( <167.032883, -6722.06787, 336.03125>, <0, -1.60793841, 0>),//4
 			NewLocPair( <1296.91602, -6719.25293, 336.03125>, <0, 178.672043, 0>),
-
-			// NewLocPair( <3654.57104, -4299.94629, 251.554062>, <0, -131.212936, 0>), //remove
-			// NewLocPair( <3087.35205, -4413.77637, 256.14917>, <0, -22.8175545, 0>),
 
 			NewLocPair( <-761.57,-4554.79,311.46>, <0, -144.43, 0>),//5
 			NewLocPair( <-1436.52,-5086.34,299.21>, <0, 40.96, 0>),
@@ -801,13 +816,21 @@ void function _soloModeInit(string mapName)
 
 			NewLocPair( <-3015.57031, -3553.14819, 272.03125>, <0, -140.035995, 0>),//13
 			NewLocPair( <-3493.69263, -4762.4126, 272.032166>, <0, 84.9091492, 0>),
+
+			NewLocPair( <4900.87,-4851.21,342.03>, <0, 84, 0>),//14
+			NewLocPair( <4523.58,-4314.47,359.03>, <0, -50, 0>),
+
+			NewLocPair( <1104.35,-5061.49,241.89>, <0, 150, 0>),//15
+			NewLocPair( <268.09,-5116.85,254.11>, <0, 35, 0>),
+
+
+
 			]
 			panelLocations = [
 				NewLocPair( <-6357.56, -110.40, -95.07>, <0, -30, 0>),//1
 				NewLocPair( <3551.47, -3581.74, 270.03>, <0, 0, 0>),//2
 				NewLocPair( <9136.70, -797.05, 310.17>, <0, -60, 0>),//3
 				NewLocPair( <718.50, -7027.66, 330.03>, <0, 170, 0>),//4
-				// NewLocPair( <3453.87, -4724.95, 170.89>, <0, -170, 0>),//remove
 				NewLocPair( <-962.44, -4706.85, 190.77>, <0, -10, 0>),//5
 				NewLocPair( <3035.04, -4838.01, 400.16>, <0, -80, 0>),//6
 				NewLocPair( <-179.10, -2264.64, -390.97>, <0, 0, 0>),//7
@@ -817,6 +840,9 @@ void function _soloModeInit(string mapName)
 				NewLocPair( <-2278.44, -5838.17, 400.03>, <0, 160, 0>),//11
 				NewLocPair( <-301.65, -4238.32, 430.03>, <0, 160, 0>),//12
 				NewLocPair( <-3079.95, -4274.58, 290.03>, <0, -120, 0>),//13
+				NewLocPair( <5190.85,-4526.38,290.03>, <0, -70, 0>),//14
+				NewLocPair( <695.27,-4614.08,260.32>, <0, 0, 0>),//15
+
 			]
 		}
 		else

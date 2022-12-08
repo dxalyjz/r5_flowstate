@@ -3433,6 +3433,8 @@ string function modChecker( string weaponMods )
 	array<string> weaponMod = split(weaponMods , " ")
 	array<string> rifles = ["mp_weapon_energy_ar","mp_weapon_esaw","mp_weapon_rspn101","mp_weapon_vinson","mp_weapon_lmg","mp_weapon_g2","mp_weapon_hemlok"]
 	array<string> smgs = ["mp_weapon_r97","mp_weapon_volt_smg","mp_weapon_pdw","mp_weapon_car"]
+	array<string> shotGun = ["mp_weapon_energy_shotgun","mp_weapon_shotgun_pistol","mp_weapon_shotgun"]
+	
 	if (weaponMod[0] == "mp_weapon_energy_ar"||weaponMod[0] == "mp_weapon_esaw")//this weapon is energy gun
 	{
 		for (int i = 1; i < weaponMod.len(); i++)
@@ -3476,6 +3478,14 @@ string function modChecker( string weaponMods )
 		}
 	}
 
+	if ( shotGun.contains(weaponMod[0]))//this weapon is shot gun
+	{
+		for (int i = 1; i < weaponMod.len(); i++)
+		{
+			if("shotgun_bolt_l3" == weaponMod[i])//force player using shotgun_bolt_l2
+				weaponMod[i] = "shotgun_bolt_l2"
+		}
+	}
 	weaponMod.reverse()
 	string returnweapon
 	foreach (i in weaponMod) {
