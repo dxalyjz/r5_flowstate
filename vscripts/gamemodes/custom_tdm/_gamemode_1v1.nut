@@ -93,12 +93,14 @@ int function getAvailableSlotIndex()
 	{
 		soloLocationInProgressIndexs.append(eachGroup.slotIndex)
 	}
+
 	array<int> availableSoloLocationIndex
 	for (int i = 0; i < soloLocations.len(); ++i)
 	{
 		if(!soloLocationInProgressIndexs.contains(i))
 			availableSoloLocationIndex.append(i)
 	}
+
 	printt("available slot :" + availableSoloLocationIndex.len())
 	if(availableSoloLocationIndex.len()==0)
 		return -1 //no available slot
@@ -181,10 +183,11 @@ bool function ClientCommand_Maki_SoloModeRest(entity player, array<string> args)
 {
 	if(soloPlayersResting.contains(player))
 	{
-		Message(player,"Matching!")
-		soloModePlayerToWaitingList(player)
+		
 		try
 		{
+			Message(player,"Matching!")
+			soloModePlayerToWaitingList(player)
 			player.Die( null, null, { damageSourceId = eDamageSourceId.damagedef_suicide } )
 		}
 		catch (error)
@@ -192,10 +195,12 @@ bool function ClientCommand_Maki_SoloModeRest(entity player, array<string> args)
 	}
 	else
 	{
-		Message(player,"You are resting now", "Type rest in console to pew pew again.")
-		soloModePlayerToRestingList(player)
+		
+		
 		try
 		{
+			Message(player,"You are resting now", "Type rest in console to pew pew again.")
+			soloModePlayerToRestingList(player)
 			player.Die( null, null, { damageSourceId = eDamageSourceId.damagedef_suicide } )
 		}
 		catch (error)
@@ -412,7 +417,7 @@ void function soloModefixDelayStart(entity player)
 	if(!isPlayerInRestingList(player))
 	{
 		HolsterAndDisableWeapons(player)
-		wait 8
+		wait 5
 		soloModePlayerToWaitingList(player)
 		try
 		{
@@ -436,7 +441,7 @@ void function setRealms_1v1(entity ent,int realmIndex)
 	{
 		ent.AddToAllRealms()
 		return
-	}//add to all realms for players in resting mode
+	}//add to all realms for player
 
 	array<int> realms = ent.GetRealms()
 	ent.AddToRealm(realmIndex)
@@ -469,25 +474,14 @@ entity function CreateSmallRingBoundary(vector Center)
 	smallcircle.kv.rendercolor = FlowState_RingColor()
 	smallcircle.kv.solid = 0
 	smallcircle.kv.VisibilityFlags = ENTITY_VISIBLE_TO_EVERYONE
-	// smallcircle.SetOwner(Owner)
 	smallcircle.SetOrigin( smallRingCenter )
 	smallcircle.SetAngles( <0, 0, 0> )
 	smallcircle.NotSolid()
 	smallcircle.DisableHibernation()
 	smallcircle.RemoveFromAllRealms()
 
-	// smallcircle.Minimap_SetObjectScale( min(smallRingRadius / SURVIVAL_MINIMAP_RING_SCALE, 1) )
-	// smallcircle.Minimap_SetAlignUpright( true )
-	// smallcircle.Minimap_SetZOrder( 2 )
-	// smallcircle.Minimap_SetClampToEdge( true )
-	// smallcircle.Minimap_SetCustomState( eMinimapObject_prop_script.OBJECTIVE_AREA )
-
 	DispatchSpawn(smallcircle)
 
-	// foreach ( eachPlayer in GetPlayerArray() )
-	// {
-	// 	smallcircle.Minimap_AlwaysShow( 0, eachPlayer )
-	// }
 	return smallcircle
 }
 
@@ -579,7 +573,6 @@ void function giveWeaponInRandomWeaponPool(entity player)
 		player.GiveWeapon( "mp_weapon_bolo_sword_primary", WEAPON_INVENTORY_SLOT_PRIMARY_2, [] )
 		if(!isPlayerInRestingList(player))
 	    	player.GiveOffhandWeapon( "melee_bolo_sword", OFFHAND_MELEE, [] )
-		// group.player2.SetActiveWeaponBySlot(eActiveInventorySlot.mainHand, WEAPON_INVENTORY_SLOT_PRIMARY_0)
 	}
 	catch (e)
 	{}
@@ -642,7 +635,7 @@ void function respawnInSoloMode(entity player, int respawnSlotIndex = -1) //复�
 		player.SetTakeDamageType( DAMAGE_YES )
 
 		//set realms for resting player
-		setRealms_1v1(player,64)//more than 63 means AddToAllRealms
+		setRealms_1v1(player,63)//more than 63 means AddToAllRealms
 
 		return
 	}//玩家在休息模式
@@ -689,7 +682,7 @@ void function respawnInSoloMode(entity player, int respawnSlotIndex = -1) //复�
 
 	thread ReCheckGodMode(player)
 
-	//set realms for two players
+	//set realms for this player
 	setRealms_1v1(player,group.slotIndex+1)
 }
 
@@ -698,10 +691,9 @@ void function _soloModeInit(string mapName)
 	array<LocPair> allSoloLocations
 	array<LocPair> panelLocations
 	LocPair waitingRoomPanelLocation
-	// LocPair waitingRoomLocation
+
 	if (mapName == "mp_rr_arena_composite")
 	{
-		// waitingRoomLocation = NewLocPair( <-7.62,200,184.57>, <0,90,0>)
 		waitingRoomPanelLocation = NewLocPair( <7.74,595.19,125>, <0,0,0>)//休息区观战面板
 
 		allSoloLocations= [
@@ -748,8 +740,38 @@ void function _soloModeInit(string mapName)
 		NewLocPair( <791.90,5470,37.96>, <0, -179, 0>),
 
 		NewLocPair( <-1300.11,825.80,263.59>, <0, -90, 0>),//15
-		NewLocPair( <-1282.95,365.33,258.52>, <0, -99, 0>),
+		NewLocPair( <-1282.95,365.33,258.52>, <0, 99, 0>),
 
+		NewLocPair( <1238.38599, 463.776398, 188.519135>, <0, 72.6185074, 0>),//16
+		NewLocPair( <1324.41174, 981.882935, 192.03125>, <0, -91.4171066, 0>),
+
+		NewLocPair( <1448.33447, 3317.91479, 192.03125>, <0, 68.6674118, 0>),//17
+		NewLocPair( <1554.34924, 3939.51025, 207.536079>, <0, -80.6048737, 0>),
+		
+		NewLocPair( <249.44,2192.07,-83.95>, <0, 0, 0>),//18
+		NewLocPair( <982.84,2282.03,-79.80>, <0, 180, 0>),
+
+		NewLocPair( <1349.37073, 4802.27588, 112.714142>, <0, -139.755951, 0>),//19
+		NewLocPair( <961.166992, 4261.96045, 96.5980682>, <0, 51.0961037, 0>),
+
+		NewLocPair( <-1605.22,3429.22,248.03>, <0, 83, 0>),//20
+		NewLocPair( <-1435.54,4249.86,248.03>, <0, -104, 0>),
+
+		NewLocPair( <2167.40918, 2935.69556, 192.019638>, <0, -109.743301, 0>),//21
+		NewLocPair( <2172.37158, 2358.00952, 192.03125>, <0, 109.198524, 0>),
+		
+		NewLocPair( <828.207886, 2858.75366, 138.439407>, <0, -53.4489517, 0>),//22
+		NewLocPair( <1273.42163, 2863.05151, 192.03125>, <0, -126.334923, 0>),
+
+		NewLocPair( <324.865631, 4042.37549, -32.0016365>, <0, 104.08799, 0>),//23
+		NewLocPair( <300.957703, 5219.19727, -31.9992428>, <0, -100.332466, 0>),
+		
+		NewLocPair( <3288.1748, 1603.40466, 140.03125>, <0, 58.516037, 0>),//24
+		NewLocPair( <3215.24048, 2158.63452, 129.175247>, <0, -19.0440102, 0>),
+		
+		NewLocPair( <-2092.07983, 2377.82764, 192.03125>, <0, 84.2584991, 0>),//25
+		NewLocPair( <-2328.0144, 2979.53149, 192.034607>, <0, -44.2118797, 0>),
+		
 		]
 
 		//panel
@@ -769,11 +791,21 @@ void function _soloModeInit(string mapName)
 			NewLocPair( <-716.40,3495.84,-30>, <0, -15, 0>),//13
 			NewLocPair( <591.95,5142.56,-30>, <0, 179, 0>),//14
 			NewLocPair( <-1530.68,500.86,190.03>, <0, -105, 0>),//15
+			NewLocPair( <1556.98523, 597.19342, 200.03125>, <0, 90, 0>),//16
+			NewLocPair( <1887.17041, 3503.83081, 195.039398>, <0, -98.78875732, 0>),//17
+			NewLocPair( <526.66,2170.51,-140.96>, <0, 10, 0>),//18
+			NewLocPair( <985.612549, 4648.27246, 130.03125>, <0, 70.373337, 0>),//19
+			NewLocPair( <-1600.47,3786.78,190>, <0, -140, 0>),//20
+			NewLocPair( <2089.88184, 2744.64038, 192.006805>, <0, -94.4084015, 0>),//21
+			NewLocPair( <1112.74988, 2514.03906, 192.067337>, <0, -161.284119, 0>),//22
+			NewLocPair( <-227.960938, 4824.87207, -23.0877609>, <0, 90.380486, 0>),//23
+			NewLocPair( <3707.19995, 1743.08301, 140.03125>, <0, -129.417236, 0>),//24
+			NewLocPair( <-2103.71606, 2601.79492, 192.053299>, <0, 104.140854, 0>),//25
+
 		]
 		}
 		else if (mapName == "mp_rr_aqueduct")
 		{
-			// waitingRoomLocation = NewLocPair( <719.94,-5805.13,494.03>, <0,90,0>)
 			waitingRoomPanelLocation = NewLocPair( <718.29,-5496.74,430>, <0,0,0>) //休息区观战面板
 
 			allSoloLocations= [
@@ -823,7 +855,53 @@ void function _soloModeInit(string mapName)
 			NewLocPair( <1104.35,-5061.49,241.89>, <0, 150, 0>),//15
 			NewLocPair( <268.09,-5116.85,254.11>, <0, 35, 0>),
 
+			NewLocPair( <236.687241, -3286.51929, 194.174698>, <0, 2.6228354, 0>),//16
+			NewLocPair( <1190.59399, -3279.21387, 189.531311>, <0, 175.707504, 0>),
 
+
+			NewLocPair( <2316.1394, -6255.12891, 272.03125>, <0, -135.394714, 0>),//17
+			NewLocPair( <1492.8938, -6749.38281, 336.03125>, <0, 16.5300903, 0>),
+
+
+			NewLocPair( <-2373.8894, -4067.91235, 272.03125>, <0, -11.765295, 0>),//18
+			NewLocPair( <-1605.19885, -4356.48682, 272.03125>, <0, 167.221832, 0>),
+
+
+			NewLocPair( <1546.54614, -3925.69653, 432.03125>, <0, 178.18158, 0>),//19
+			NewLocPair( <-88.5635071, -3930.20972, 432.03125>, <0, -3.95487189, 0>),
+
+
+			NewLocPair( <-1357.79187, -2538.92139, -177.872864>, <0, 161.874039, 0>),//20
+			NewLocPair( <-1712.66296, -2455.35352, -179.737701>, <0, -15.1608248, 0>),
+
+
+			NewLocPair( <4686.76953, -4032.88989, 289.03125>, <0, 128.110565, 0>),//21
+			NewLocPair( <4325.82275, -3579.64404, 272.03125>, <0, -38.2275581, 0>),
+			
+
+			NewLocPair( <3235.31445, -2440.99512, -170.73761>, <0, -174.955383, 0>),//22
+			NewLocPair( <2659.73682, -2574.521, -169.679779>, <0, 10.7634172, 0>),
+			
+
+			NewLocPair( <2091.56885, -5355.79199, 272.03125>, <0, 168.726898, 0>),//23
+			NewLocPair( <1703.44958, -5388.27637, 272.03125>, <0, 33.2674942, 0>),
+			
+
+			NewLocPair( <1201.47375, -4569.81885, 272.03125>, <0, 102.834091, 0>),//24
+			NewLocPair( <1174.39063, -4099.19482, 272.03125>, <0, -86.6457367, 0>),
+			
+
+			NewLocPair( <509.780792, -3553.27417, 272.03125>, <0, -32.6431389, 0>),//25
+			NewLocPair( <940.882507, -3571.79614, 272.03125>, <0, -165.179703, 0>),
+			
+
+			NewLocPair( <-1011.33984, -5737.27686, 272.03125>, <0, 160.994431, 0>),//26
+			NewLocPair( <-1450.14954, -5626.41504, 291.342773>, <0, -29.6448517, 0>),
+			
+
+			NewLocPair( <-2114.90674, -5093.61523, 400.15564>, <0, -17.1056633, 0>),//27
+			NewLocPair( <-1705.21277, -5217.26758, 400.15567>, <0, 162.525665, 0>),
+			
 
 			]
 			panelLocations = [
@@ -842,6 +920,18 @@ void function _soloModeInit(string mapName)
 				NewLocPair( <-3079.95, -4274.58, 290.03>, <0, -120, 0>),//13
 				NewLocPair( <5190.85,-4526.38,290.03>, <0, -70, 0>),//14
 				NewLocPair( <695.27,-4614.08,260.32>, <0, 0, 0>),//15
+				NewLocPair( <708.920288, -2988.02588, -9.62331676>, <0, 0, 0>),//16
+				NewLocPair( <1870.75488, -6479.83447, 400.03125>, <0, 30, 0>),//17
+				NewLocPair( <-1978.19421, -4416.03223, 236.325821>, <0, -20, 0>),//18
+				NewLocPair( <699.656738, -3733.9458, 472.10907>, <0, 0, 0>),//19
+				NewLocPair( <-1591.87451, -2729.90186, -22.8790321>, <0, 170, 0>),//20
+				NewLocPair( <4786.11816, -3532.48218, 289.03125>, <0, -62.8320656, 0>),//21
+				NewLocPair( <3009.39917, -2712.67188, -34.4465103>, <0, -170.362656, 0>),//22
+				NewLocPair( <1864.15967, -4985.94287, 171.889587>, <0, 4.93536282, 0>),//23
+				NewLocPair( <1411.21692, -4292.29199, 272.03125>, <0, -78.5810471, 0>),//24
+				NewLocPair( <711.917542, -3850.45361, 272.03125>, <0, -179.304123, 0>),//25
+				NewLocPair( <-1193.65161, -5708.77441, 273.224915>, <0, -9.75974274, 0>),//26
+				NewLocPair( <-1848.05164, -4968.32764, 400.15564>, <0, -9.37366867, 0>),//27
 
 			]
 		}
@@ -910,7 +1000,6 @@ void function _soloModeInit(string mapName)
 		AddCallback_OnUseEntity( panel, void function(entity panel, entity user, int input)
 		{
 			soloGroupStruct group = returnSoloGroupOfPlayer(user)
-			// if (!IsValid(group.player1) || !IsValid(group.player2)) return
 			if(!isGroupVaild(group)) return //Is this group is available
 			if (soloLocations[group.slotIndex].Panel != panel) return //有傻逼捣乱
 
@@ -1012,18 +1101,29 @@ void function soloModeThread(LocPair waitingRoomLocation)
 			if(!IsValid(eachGroup.player1) || !IsValid(eachGroup.player2)) //Is player in this group quit the game
 			{
 				printt("solo player quit!!!!!")
+				bool isEmptyGroup = false
 				if(IsValid(eachGroup.player1))
 				{
 					soloModePlayerToWaitingList(eachGroup.player1) //back to wating list
 					Message(eachGroup.player1,"Your opponent has disconnected!")
+					isEmptyGroup = true
 				}
 
 				if(IsValid(eachGroup.player2))
 				{
 					soloModePlayerToWaitingList(eachGroup.player2) //back to wating list
 					Message(eachGroup.player2,"Your opponent has disconnected!")
+					isEmptyGroup = true
 				}
-				continue
+
+				if(isEmptyGroup)
+				{
+					if(IsValid(soloLocations[eachGroup.slotIndex].Panel)) //Panel in current Location
+						soloLocations[eachGroup.slotIndex].Panel.SetSkin(1) //set panel to red(default color)
+					destroyRingsForGroup(eachGroup) //delete rings
+					soloPlayersInProgress.removebyvalue(eachGroup) //delete this group
+				}
+				continue//to do: delete the last group when server is empty
 			}
 
 			//检测乱跑的脑残
@@ -1104,7 +1204,7 @@ void function soloModeThread(LocPair waitingRoomLocation)
 					if(playerSelf == eachOpponent || !IsValid(eachOpponent))//过滤非法对手
 						continue
 
-					if(fabs(selfKd - opponentKd) > 1.5) //过滤kd差值
+					if(fabs(selfKd - opponentKd) > 1) //过滤kd差值
 						continue
 					properOpponentTable[eachOpponent] <- fabs(selfKd - opponentKd)
 				}
@@ -1169,10 +1269,10 @@ void function soloModeThread(LocPair waitingRoomLocation)
 			thread respawnInSoloMode(eachPlayer, index)
 		}
 		newGroup.ring = CreateSmallRingBoundary(soloLocations[newGroup.slotIndex].Center)
-		setRealms_1v1(newGroup.ring,newGroup.slotIndex+1)
-		//realms = 0 means visible for everyone,so it should be more than 1
-		setRealms_1v1(newGroup.player1,newGroup.slotIndex+1) //to ensure realms is more than 0
-		setRealms_1v1(newGroup.player2,newGroup.slotIndex+1) //to ensure realms is more than 0
+		setRealms_1v1(newGroup.ring,newGroup.slotIndex+1) //set ring's realms, newGroup.slotIndex+1 to ensure realms is more than 0
+		//realms = 0 means visible for everyone,so it should be more than 0
+		setRealms_1v1(newGroup.player1,newGroup.slotIndex+1) //set player's realms, newGroup.slotIndex+1 to ensure realms is more than 0
+		setRealms_1v1(newGroup.player2,newGroup.slotIndex+1) //set player's realms, newGroup.slotIndex+1 to ensure realms is more than 0
 
 	}//while(true)
 

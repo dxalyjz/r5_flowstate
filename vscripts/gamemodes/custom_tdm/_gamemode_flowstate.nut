@@ -665,7 +665,7 @@ void function _OnPlayerDied(entity victim, entity attacker, var damageInfo)
 	if( victim.p.isSpectating )
 		return
 
-	if(victim != attacker && GetCurrentPlaylistVarBool("flowstateBattleLogEnable", false ))
+	if(victim != attacker && GetCurrentPlaylistVarBool("flowstateBattleLogEnable", false ) && DamageInfo_GetDamageSourceIdentifier( damageInfo ) != damagedef_suicide)
 		Flowstate_AppendBattleLogEvent(attacker, victim)
 	
 	if( is1v1EnabledAndAllowed() )
@@ -1250,11 +1250,11 @@ void function GiveRandomPrimaryWeaponMetagame(entity player)
 		"mp_weapon_volt_smg optic_cq_hcog_classic energy_mag_l2  stock_tactical_l1",
 		"mp_weapon_r97 optic_cq_hcog_classic  stock_tactical_l1 bullets_mag_l2",
 		"mp_weapon_volt_smg optic_cq_hcog_classic energy_mag_l2  stock_tactical_l1",
-		"mp_weapon_energy_shotgun optic_cq_threat shotgun_bolt_l2",
-		"mp_weapon_energy_shotgun optic_cq_threat shotgun_bolt_l2",
+		"mp_weapon_energy_shotgun optic_cq_threat shotgun_bolt_l1",
+		"mp_weapon_energy_shotgun optic_cq_threat shotgun_bolt_l1",
 		"mp_weapon_mastiff",
-		"mp_weapon_shotgun optic_cq_threat shotgun_bolt_l2",
-		"mp_weapon_shotgun optic_cq_threat shotgun_bolt_l2",
+		"mp_weapon_shotgun optic_cq_threat shotgun_bolt_l1",
+		"mp_weapon_shotgun optic_cq_threat shotgun_bolt_l1",
 	]
 
 	foreach(weapon in Weapons)
@@ -3482,8 +3482,8 @@ string function modChecker( string weaponMods )
 	{
 		for (int i = 1; i < weaponMod.len(); i++)
 		{
-			if("shotgun_bolt_l3" == weaponMod[i])//force player using shotgun_bolt_l2
-				weaponMod[i] = "shotgun_bolt_l2"
+			if("shotgun_bolt_l3" == weaponMod[i] || "shotgun_bolt_l2" == weaponMod[i])//force player using shotgun_bolt_l1
+				weaponMod[i] = "shotgun_bolt_l1"
 		}
 	}
 	weaponMod.reverse()
